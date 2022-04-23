@@ -22,7 +22,7 @@ The directory structure used by the server software is as follows:
 
 ```
 └── servidoralarma
-    ├── firebaseToken.txt
+    ├── config.json
     ├── ServidorAlarma.jar
     ├── cam
     │   ├── cam_1
@@ -39,7 +39,30 @@ The directory structure used by the server software is as follows:
 
 `servidoralarma` and `ServidorAlarma.jar` names can be modified by another language (they are in Spanish) but if they are modified, these changes must be transferred to the service script. Don't mind, it's quite easy.
 
-`firebaseToken.txt` is a plain text file that should contain the token provided by the Firebase Cloud Messaging service. This token can be obtained through Firebase page --> settings --> cloud messaging.
+`config.json` is a plain text file with JSON format that contains the configuration payload for the server. This file should be configurated once per installation. Its content is as follows:
+
+```json
+{
+"server":{
+	"rmi_port":28803,
+	"usb_port":"/dev/ttyACM0"
+	},
+"firebase":{
+	"firebase_token":"[firebase_token]",
+	"android_channel":"alarma_vivienda",
+	"uri_image":"[uri_to_image]",
+	"url_fcm":"https://fcm.googleapis.com/fcm/send",
+	"time_to_live":2419200
+	},
+"sql":{
+	"url":"jdbc:mysql://localhost:3306/",
+	"user_name":"[user_name]",
+	"user_password":"[user_password]",
+	"script_create":"sql/script.sql",
+	"script_insert":"sql/insert.sql"
+	}
+}
+```
 
 ## App
 
