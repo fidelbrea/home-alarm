@@ -73,6 +73,8 @@ The directory structure used by the server software is as follows:
 
 In this folder is located the source code for an Andoid mobile smartphone.
 
+Be sure to customize the RMI service port in the `integers.xml` file and the RMI server URL in the `network_security_config.xml` and `string.xml` files (and all the languages string files you want to use, for example `string-es-rES.xml` for spanish).
+
 ## Author
 
 The author of this project is Fidel Brea (https://github.com/fidelbrea)
