@@ -49,9 +49,9 @@ The directory structure used by the server software is as follows:
 	},
 "firebase":{
 	"firebase_token":"[firebase_token]",
+	"url_fcm":"https://fcm.googleapis.com/fcm/send",
 	"android_channel":"alarma_vivienda",
 	"uri_image":"[uri_to_image]",
-	"url_fcm":"https://fcm.googleapis.com/fcm/send",
 	"time_to_live":2419200
 	},
 "sql":{
