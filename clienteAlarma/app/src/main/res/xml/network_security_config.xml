@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">[put_your_RMI_server_url_here]</domain>
+    </domain-config>
+</network-security-config>

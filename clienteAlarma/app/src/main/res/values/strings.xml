@@ -1,0 +1,114 @@
+<resources>
+    <!-- App info -->
+    <string name="app_name">Home Alarm</string>
+
+    <!-- Alarm server info -->
+    <string name="url_server" translatable="false">[put_your_RMI_server_here]</string>
+
+    <!-- Firebase Cloud Messaging server info -->
+    <string name="default_notification_channel_id" translatable="false">alarma_vivienda</string>
+    <string name="default_notification_channel_name" translatable="false">alarma_vivienda</string>
+    <string name="default_notification_channel_description">Home alarm channel</string>
+    <string name="msg_subscribed">Subscribed to alarm channel</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to alarm channel</string>
+    <string name="fcm_message">FCM message</string>
+
+    <!-- Testing messages (to be deleted) -->
+    <string name="txtTest" translatable="false">Test text</string>
+    <string name="error" translatable="false">Something went wrong</string>
+
+    <!-- Menu buttons -->
+    <string name="alarm">Alarm</string>
+    <string name="users">Users</string>
+    <string name="sensors">Sensors</string>
+    <string name="cameras">Cameras</string>
+    <string name="log">Log</string>
+    <string name="settings">Settings</string>
+    <string name="shoot">Shoot event</string>
+    <string name="back">Back</string>
+    <string name="exit">Exit</string>
+
+    <!-- Alarm states -->
+    <string name="state_armed">Armed</string>
+    <string name="state_disarmed">Disarmed</string>
+
+    <!-- Images descriptions -->
+    <string name="description_background_image">Background image</string>
+    <string name="description_logo">Logo image</string>
+    <string name="description_camera_image">Camera image</string>
+
+    <!-- login items -->
+    <string name="welcome">Welcome to Alarm Client</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="TandC">I agree to the terms and condition of Brea, Fidel (to be implemented)</string>
+    <string name="error_view"/>
+    <string name="password">Password</string>
+    <string name="email_hint">user@domain.com</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="email_verify_again">Send verify email again</string>
+    <string name="enterEmailId">Enter the registered email id</string>
+    <string name="reset_password">Reset password</string>
+    <string name="user_domain_com">user@domain.com</string>
+
+    <!-- Toasts -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="event_shoot">Event shoot</string>
+
+    <!-- Dialog messages -->
+    <string name="confirm_delete">Are you sure about deleting %1$s?</string>
+    <string name="confirm_exit">Are you sure to exit?</string>
+    <string name="arm_alarm">Arm</string>
+    <string name="disarm_alarm">Disarm</string>
+    <string name="add_cam">Add camera</string>
+    <string name="alias">Alias</string>
+    <string name="uri" translatable="false">URI</string>
+    <string name="uri_hint" translatable="false">[rtsp | http]://user:pass@ip:port/...</string>
+    <string name="alias_hint">Alias without spaces</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_empty_field">cant be empty</string>
+    <string name="cam_added">Camera added</string>
+    <string name="error_length">length must to be between %d and %d characters</string>
+    <string name="error_length_short">length must to be over %d characters</string>
+    <string name="error_format">format is not correct</string>
+    <string name="enabled">Enabled</string>
+    <string name="delayed">Delayed trigger</string>
+    <string name="edit_alias">Change alias</string>
+    <string name="associate_with_cams">Associate with cameras</string>
+    <string name="state_triggered">Triggered!!</string>
+    <string name="state_unknown">(unknown)</string>
+    <string name="error_email_empty">Email cannot be empty</string>
+    <string name="error_password_empty">Password cannot be empty</string>
+    <string name="error_agree_terms_and_conditions">Please agree to terms and Condition</string>
+    <string name="error_authentication_failed">Authentication failed</string>
+    <string name="empty" translatable="false" />
+    <string name="verify_email_id">Please verify your email</string>
+    <string name="verification_email_sent">A verification email is sent to your registered email, please click on the link and sign in again!</string>
+    <string name="error_email_not_authorized">Email not authorized</string>
+    <string name="email_sent">Email sent</string>
+    <string name="reset_passwd_email_sent">A reset password link is sent to your registered email</string>
+    <string name="ok">Ok</string>
+    <string name="add_user">Add user</string>
+    <string name="user_added">User added</string>
+    <string name="user_not_added">User not added. Data could be duplicated.</string>
+    <string name="must_exist_admin">It must exist at least one administrator</string>
+    <string name="code">Code</string>
+    <string name="tag">RFID</string>
+    <string name="is_admin">Is administrator</string>
+    <string name="modify_code">Modify code</string>
+    <string name="modify_tag">Modify tag RFID</string>
+    <string name="alarm_armed">Alarm armed</string>
+    <string name="alarm_disarmed">Alarm disarmed</string>
+    <string name="confirm_arm">Are you sure to ARM the alarm?</string>
+    <string name="confirm_disarm">Are you sure to DISARM the alarm?</string>
+    <string name="advise_insert_code">Insert the code on the keyboard</string>
+    <string name="advise_aproach_tag">Approach RFID Tag to the reader</string>
+    <string name="modify_alias">Modify alias</string>
+    <string name="enterNewAlias">Enter new alias</string>
+    <string name="new_alias">New alias</string>
+    <string name="alias_modified">Alias modified</string>
+    <string name="error_not_accepted">is not accepted by server. Is it already used?</string>
+</resources>

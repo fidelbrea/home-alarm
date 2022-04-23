@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Alarma Casa</string>
+    <string name="url_server" translatable="false">[put_your_RMI_server_here]</string>
+    <string name="default_notification_channel_id" translatable="false">alarma_vivienda</string>
+    <string name="default_notification_channel_name" translatable="false">alarma_vivienda</string>
+    <string name="default_notification_channel_description">Canal de alarma de casa</string>
+    <string name="msg_subscribed">Suscrito al canal de alarma</string>
+    <string name="msg_subscribe_failed">No se pudo suscribir al canal de alarma</string>
+    <string name="fcm_message">Mensaje de FCM</string>
+    <string name="txtTest" translatable="false">Test text</string>
+    <string name="error" translatable="false">Something went wrong</string>
+    <string name="users">Usuarios</string>
+    <string name="sensors">Sensores</string>
+    <string name="cameras">Cámaras</string>
+    <string name="log">Historial</string>
+    <string name="settings">Ajustes</string>
+    <string name="shoot">Disparar evento</string>
+    <string name="back">Atrás</string>
+    <string name="exit">Salida</string>
+    <string name="state_armed">Armado</string>
+    <string name="state_disarmed">Desarmado</string>
+    <string name="description_background_image">Imagen de fondo</string>
+    <string name="description_logo">Logotipo</string>
+    <string name="description_camera_image">imagen de la cámara</string>
+    <string name="welcome">Bienvenido a Cliente de Alarma</string>
+    <string name="sign_up">Inscribirse</string>
+    <string name="sign_in">Entrar</string>
+    <string name="TandC">Acepto los términos y condiciones de Fidel Brea (ha implementar)</string>
+    <string name="error_view"/>
+    <string name="password">Clave</string>
+    <string name="email_hint">usuario@dominio.com</string>
+    <string name="email">Correo electrónico</string>
+    <string name="forgot_password">He olvidado mi contraseña</string>
+    <string name="email_verify_again">Enviar correo electrónico de verificación nuevamente</string>
+    <string name="enterEmailId">Ingrese la identificación de correo electrónico registrada</string>
+    <string name="reset_password">Restablecer la contraseña</string>
+    <string name="user_domain_com">usuario@dominio.com</string>
+    <string name="event_shoot">Evento disparado</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="confirm_delete">¿Está seguro de borrar %1$s?</string>
+    <string name="confirm_exit">¿Está seguro de que desa salir?</string>
+    <string name="alarm">Alarma</string>
+    <string name="arm_alarm">Armar</string>
+    <string name="disarm_alarm">Desarmar</string>
+    <string name="add_cam">Añadir cámara</string>
+    <string name="alias">Alias</string>
+    <string name="uri" translatable="false">URI</string>
+    <string name="uri_hint">[rtsp | http]://user:pass@ip:port/...</string>
+    <string name="alias_hint">Alias sin espacios</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="error_empty_field">no puede estar vacío</string>
+    <string name="cam_added">Cámara añadida</string>
+    <string name="error_length">debe tener entre %d y %d caracteres</string>
+    <string name="error_length_short">debe tener más de %d caracteres</string>
+    <string name="error_format">tiene un formato incorrecto</string>
+    <string name="enabled">Habilitado</string>
+    <string name="delayed">Disparo retardado</string>
+    <string name="edit_alias">Cambiar alias</string>
+    <string name="associate_with_cams">Asociar con cámaras</string>
+    <string name="state_triggered">¡¡Disparada!!</string>
+    <string name="state_unknown">(desconocido)</string>
+    <string name="empty" />
+    <string name="error_email_empty">Debe especificar un email</string>
+    <string name="error_password_empty">Debe especificar una contraseña</string>
+    <string name="error_agree_terms_and_conditions">Por favor, acepte los términos y condiciones.</string>
+    <string name="error_authentication_failed">Autenticación fallida</string>
+    <string name="verify_email_id">Por favor, verifique su email</string>
+    <string name="verification_email_sent">Se le ha enviado un email a su cuenta. Por favor, verifique este correo electrónico y vuelva a entrar.</string>
+    <string name="error_email_not_authorized">Email no autorizado</string>
+    <string name="email_sent">Email enviado</string>
+    <string name="reset_passwd_email_sent">Se ha enviado un correo con un enlace a su email</string>
+    <string name="ok">Ok</string>
+    <string name="add_user">Añadir usuario</string>
+    <string name="user_added">Usuario añadido</string>
+    <string name="user_not_added">Usuario no añadido. Los datos pueden estar duplicados.</string>
+    <string name="must_exist_admin">Debe existir almenos un administrador</string>
+    <string name="code">Código</string>
+    <string name="tag">RFID</string>
+    <string name="is_admin">Es administrador</string>
+    <string name="modify_code">Modificar código</string>
+    <string name="modify_tag">Modificar RFID</string>
+    <string name="alarm_armed">Alarma armada</string>
+    <string name="alarm_disarmed">Alarma desarmada</string>
+    <string name="confirm_arm">¿Está seguro de ARMAR la alarma?</string>
+    <string name="confirm_disarm">¿Está seguro de DESARMAR la alarma?</string>
+    <string name="advise_insert_code">Introduzca el código en el teclado</string>
+    <string name="advise_aproach_tag">Aproxime la etiqueta RFID al lector</string>
+    <string name="modify_alias">Modificar alias</string>
+    <string name="enterNewAlias">Introduzca el nuevo alias</string>
+    <string name="new_alias">Nuevo alias</string>
+    <string name="alias_modified">Alias modificado</string>
+    <string name="error_not_accepted">no es aceptado por el servidor. ¿Ya está siendo usado?</string>
+</resources>
