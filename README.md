@@ -12,7 +12,7 @@ Can't find what you're looking for? Do not panic, I'm still working on it.  ;)
 
 In this folder is located the source code for an `Arduino MEGA 2560` board.
 
-## Server
+## ServidorAlarma (alarm server)
 
 In this folder is located the source code for a server who must to be installed on a GNU/Linux 24/7 machine.
 
