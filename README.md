@@ -1,21 +1,57 @@
 # Home alarm
 
-Home alarm is the final degree project that develops a complete alarm system for the home.
+Home alarm is the final degree project that develops a complete alarm system for a home or shop.
 
-The project focuses on software development, however, there is a few information about electrical and electronic components.
+The project focuses on software development. However, there is a few information about electrical and electronic components.
 
 Can't find what you're looking for? Do not panic, I'm still working on it.  ;)
 
 ![61xuG2P8cLL _AC_SX450_](https://user-images.githubusercontent.com/55228730/164787151-0edceca5-9fa5-4367-a6a1-032ab7e3010f.jpg)
 
+## Centralita (alarm switchboard)
+
+In this folder is located the source code for an `Arduino MEGA 2560` board.
+
+## Server
+
+In this folder is located the source code for a server who must to be installed on a GNU/Linux 24/7 machine.
+
+For the prototype I have used a `Raspberry Pi 3` board and it worked great. There is something that worries me and should be valued: I mean that the Raspberry Pi works with a micro SD card and there is a limitation of amount of read and write cycles, therefore, an alternative such as using a RamDisk should be sought.
+
+The directory structure used by the server software is as follows:
+
+```
+└── servidoralarma
+    ├── firebaseToken.txt
+    ├── ServidorAlarma.jar
+    ├── cam
+    │   ├── cam_1
+    │   ├── cam_2
+    │   ├── ...
+    │   └── cam_n
+    ├── lib
+    │   ├── commons-codec-1.9.jar
+    │   ├── javaWsDiscovery-0.1.jar
+    │   ├── jSerialComm-2.9.1.jar
+    │   └── mysql-connector-java-8.0.28.jar
+    └── sql
+        ├── insert.sql
+        └── script.sql
+```
+
+`servidoralarma` and `ServidorAlarma.jar` names can be modified by another language (they are in Spanish) but if they are modified, these changes must be transferred to the service script. Don't mind, it's quite easy.
+
+`firebaseToken.txt` is a plain text file that should contain the token provided by the Firebase Cloud Messaging service. This token can be obtained through Firebase page --> settings --> cloud messaging.
+
+## App
+
+In this folder is located the source code for an `Arduino MEGA 2560` board.
+
 ## Author
 
-The author of this project is Fidel Brea.
-
-https://github.com/fidelbrea
+The author of this project is Fidel Brea (https://github.com/fidelbrea)
 
 To contact personally you can email to fidelbreamontilla@gmail.com
-
 
 ## License
 
