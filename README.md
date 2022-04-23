@@ -43,7 +43,7 @@ The directory structure used by the server software is as follows:
 
 `servidoralarma` and `ServidorAlarma.jar` names can be modified by another language (they are in Spanish) but if they are modified, these changes must be transferred to the service script. Don't mind, it's quite easy.
 
-`config.json` is a plain text file with JSON format that contains the configuration payload for the server. This file should be configurated once per installation. Its content is as follows:
+`config.json` is a plain text file with JSON format that contains the configuration payload for the server. This file should be configurated once per installation. This file is quite important and it must to be placed with the server `.jar` file. Its content is as follows:
 
 ```json
 {
