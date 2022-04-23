@@ -1,6 +1,6 @@
 # Home alarm
 
-Home alarm is the final degree project that develops a complete alarm system for a home or shop.
+Home alarm is a final degree project that develops a complete alarm system for a home or shop.
 
 The project focuses on software development. However, there is a few information about electrical and electronic components.
 
