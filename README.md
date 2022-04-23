@@ -21,20 +21,23 @@ For the prototype I have used a `Raspberry Pi 3` board and it worked great. Ther
 The directory structure used by the server software is as follows:
 
 ```
-└── servidoralarma
-    ├── config.json
-    ├── ServidorAlarma.jar
-    ├── cam
-    │   ├── cam_1
-    │   ├── cam_2
-    │   ├── ...
-    │   └── cam_n
-    ├── lib
-    │   ├── jSerialComm-2.9.1.jar
-    │   └── mysql-connector-java-8.0.28.jar
-    └── sql
-        ├── insert.sql
-        └── script.sql
+└── usr
+    └── local
+        └── bin
+            └── servidoralarma
+                ├── config.json
+                ├── ServidorAlarma.jar
+                ├── cam
+                │   ├── cam_1
+                │   ├── cam_2
+                │   ├── ...
+                │   └── cam_n
+                ├── lib
+                │   ├── jSerialComm-2.9.1.jar
+                │   └── mysql-connector-java-8.0.28.jar
+                └── sql
+                    ├── insert.sql
+                    └── script.sql
 ```
 
 `servidoralarma` and `ServidorAlarma.jar` names can be modified by another language (they are in Spanish) but if they are modified, these changes must be transferred to the service script. Don't mind, it's quite easy.
