@@ -67,7 +67,7 @@ The directory structure used by the server software is as follows:
 
 ## App
 
-In this folder is located the source code for an `Arduino MEGA 2560` board.
+In this folder is located the source code for an Andoid mobile smartphone.
 
 ## Author
 
