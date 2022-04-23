@@ -89,10 +89,7 @@ void loop() {
   // ******************************************************************
   // Vigilancia de la memoria RAM
   // Si la RAM disponible baja de un umbral, reiniciamos la placa
-  if(alarma.getEstado() != EstadoAlarma::ARMADA &&
-     alarma.getEstado() != EstadoAlarma::PREDISPARO_INICIAL &&
-     alarma.getEstado() != EstadoAlarma::PREDISPARO_FINAL &&
-     alarma.getEstado() != EstadoAlarma::DISPARADA)
+  if(alarma.getEstado() == EstadoAlarma::DESARMADA)
     checkRamLevel();
   
   // ******************************************************************
