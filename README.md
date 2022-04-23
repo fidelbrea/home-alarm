@@ -73,7 +73,7 @@ In this folder is located the source code for an Andoid mobile smartphone.
 
 The author of this project is Fidel Brea (https://github.com/fidelbrea)
 
-To contact personally you can email to fidelbreamontilla@gmail.com
+To contact personally email to fidelbreamontilla@gmail.com
 
 ## License
 
