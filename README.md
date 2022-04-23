@@ -63,6 +63,7 @@ The directory structure used by the server software is as follows:
 	}
 }
 ```
+`config.json` file contains critical information so it must to be owned by root user with 600 permisions.
 
 ## App
 
