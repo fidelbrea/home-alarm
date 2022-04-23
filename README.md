@@ -21,6 +21,7 @@ For the prototype I have used a `Raspberry Pi 3` board and it worked great. Ther
 The directory structure used by the server software is as follows:
 
 ```
+/
 └── usr
     └── local
         └── bin
