@@ -6,7 +6,7 @@ The project focuses on software development. However, there is a few information
 
 Can't find what you're looking for? Do not panic, I'm still working on it.  ;)
 
-![61xuG2P8cLL _AC_SX450_](https://user-images.githubusercontent.com/55228730/164787151-0edceca5-9fa5-4367-a6a1-032ab7e3010f.jpg)
+![no_panic](https://brea.synology.me/img/no_panic.png)
 
 ## Centralita (alarm switchboard)
 
