@@ -30,8 +30,6 @@ The directory structure used by the server software is as follows:
     │   ├── ...
     │   └── cam_n
     ├── lib
-    │   ├── commons-codec-1.9.jar
-    │   ├── javaWsDiscovery-0.1.jar
     │   ├── jSerialComm-2.9.1.jar
     │   └── mysql-connector-java-8.0.28.jar
     └── sql
