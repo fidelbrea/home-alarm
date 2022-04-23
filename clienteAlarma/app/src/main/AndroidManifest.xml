@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fidelbrea.clientealarma">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ForgotPasswordActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SignInActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SignUpActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingCamerasActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingCameraModifyAliasActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".AddCameraActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingSensorsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingSensorActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingSensorModifyAliasActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingSensorCamsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingUsersActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingUserActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".SettingUserModifyAliasActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".AddUserActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".AlarmActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".CamerasActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".LogActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".EventsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".PhotosActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".ShowPictureActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme"/>
+
+        <activity android:name=".MainMenuActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme">
+        </activity>
+
+        <activity android:name=".WelcomeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlarmClientTheme">
+            <intent-filter>
+                <action android:name="OPEN_ACTIVITY_1" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="firebase.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/alarm" />
+    </application>
+
+</manifest>
