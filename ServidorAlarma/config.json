@@ -1,0 +1,20 @@
+{
+"server":{
+	"rmi_port":28803,
+	"serial_port":"/dev/ttyACM0"
+	},
+"firebase":{
+	"firebase_token":"",
+	"url_fcm":"https://fcm.googleapis.com/fcm/send",
+	"android_channel":"alarma_vivienda",
+	"uri_image":"",
+	"time_to_live":2419200
+	},
+"sql":{
+	"url":"jdbc:mysql://localhost:3306/",
+	"user_name":"",
+	"user_password":"",
+	"script_create":"sql/script.sql",
+	"script_insert":"sql/insert.sql"
+	}
+}
