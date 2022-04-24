@@ -112,6 +112,7 @@ void loop() {
           for(int i=0; i<doc[F("datos")][F("codigos")].size(); i++){
             String codigo = doc[F("datos")]["codigos"][i];
             if(codigoTeclado.equals(codigo)){
+              jsonArmado = "";
               alarma.desarmar();
               break;
             }
@@ -139,6 +140,7 @@ void loop() {
           const char* tipo = doc[F("tipo")];
           for(int i=0; i<doc[F("datos")][F("etiquetas")].size(); i++){
             if(etiquetaLeida == doc[F("datos")]["etiquetas"][i]){
+              jsonArmado = "";
               alarma.desarmar();
               break;
             }
@@ -214,6 +216,7 @@ void serialEvent() {
             }
             alarma.prearmar();
           }else if(strcmp(tipo, "desarmar")==0){
+            jsonArmado = "";
             alarma.desarmar();
           }else if(strcmp(tipo, "getAlarmState")==0){
             StaticJsonDocument<256> doc;
@@ -234,6 +237,12 @@ void serialEvent() {
               data.add(alarma.getSensor(nSensor)->isHabilitado());
               data.add(alarma.getSensor(nSensor)->isPredisparo());
             }
+            serializeJsonPretty(doc, Serial);
+            Serial.flush();
+          }else if(strcmp(tipo, "getJsonArmado")==0){
+            StaticJsonDocument<256> doc;
+            doc[F("tipo")] = F("RAM");
+            doc[F("datos")] = jsonArmado;
             serializeJsonPretty(doc, Serial);
             Serial.flush();
           }else if(strcmp(tipo, "getRam")==0){
