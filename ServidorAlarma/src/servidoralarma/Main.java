@@ -160,7 +160,7 @@ public class Main {
                     servidor.escribe("getSensors   Obtiene la configuracion de los sensores");
                     servidor.escribe("setSensors   Establece la configuracion de los sensores con la info de la BD");
                     servidor.escribe("getRam       Muestra la cantidad de RAM en bytes disponibles en la placa Arduino");
-                    servidor.escribe("getLoops     Muestra el numero de loops cada 10 segundos (habilitado solamente durante pruebas)");
+                    servidor.escribe("getLoops     Muestra el numero de loops cada 10 segundos");
                     servidor.escribe("exit         Finaliza el servidor");
                 } else {
                     servidor.escribe("El comando " + entradaTeclado + " no se reconoce");
