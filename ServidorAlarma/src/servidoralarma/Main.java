@@ -134,6 +134,8 @@ public class Main {
                     servidor.armAlarm();
                 } else if (entradaTeclado.startsWith("disarmAlarm")) {
                     servidor.disarmAlarm();
+                } else if (entradaTeclado.startsWith("getJsonArmado")) {
+                    servidor.getJsonArmado();
                 } else if (entradaTeclado.startsWith("getRam")) {
                     servidor.getRam();
                 } else if (entradaTeclado.startsWith("getLoops")) {
@@ -153,15 +155,16 @@ public class Main {
                         servidor.escribe(e.toString());
                     }
                 } else if (entradaTeclado.equals("help")) {
-                    servidor.escribe("help         Muestra esta ayuda");
-                    servidor.escribe("msg [texto]  Envia a los smartphones mensaje por defecto o texto especificado");
-                    servidor.escribe("armAlarm     Arma el sistema de alarma");
-                    servidor.escribe("disarmAlarm  Desarma el sistema de alarma");
-                    servidor.escribe("getSensors   Obtiene la configuracion de los sensores");
-                    servidor.escribe("setSensors   Establece la configuracion de los sensores con la info de la BD");
-                    servidor.escribe("getRam       Muestra la cantidad de RAM en bytes disponibles en la placa Arduino");
-                    servidor.escribe("getLoops     Muestra el numero de loops cada 10 segundos");
-                    servidor.escribe("exit         Finaliza el servidor");
+                    servidor.escribe("help          Muestra esta ayuda");
+                    servidor.escribe("msg [texto]   Envia a los smartphones mensaje por defecto o texto especificado");
+                    servidor.escribe("armAlarm      Arma el sistema de alarma");
+                    servidor.escribe("disarmAlarm   Desarma el sistema de alarma");
+                    servidor.escribe("getSensors    Obtiene la configuracion de los sensores");
+                    servidor.escribe("setSensors    Establece la configuracion de los sensores con la info de la BD");
+                    servidor.escribe("getJsonArmado Muestra el contenido de la variable jsonArmado");
+                    servidor.escribe("getRam        Muestra la cantidad de RAM en bytes disponibles en la placa Arduino");
+                    servidor.escribe("getLoops      Muestra el numero de loops cada 10 segundos");
+                    servidor.escribe("exit          Finaliza el servidor");
                 } else {
                     servidor.escribe("El comando " + entradaTeclado + " no se reconoce");
                     servidor.escribe("Teclee el comando help para obtener ayuda");
@@ -296,10 +299,8 @@ public class Main {
             } else if (resource.getProtocol().equals("zip")) {
                 String path = resource.getPath();
                 File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
-                //long jfodLastModifiedLong = jarFileOnDisk.lastModified ();
-                //Date jfodLasModifiedDate = new Date(jfodLastModifiedLong);
                 try ( JarFile jf = new JarFile(jarFileOnDisk)) {
-                    ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));//Skip the ! and the /
+                    ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
                     long zeTimeLong = ze.getTime();
                     Date zeTimeDate = new Date(zeTimeLong);
                     d = zeTimeDate;
