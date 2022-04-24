@@ -239,12 +239,6 @@ void serialEvent() {
             }
             serializeJsonPretty(doc, Serial);
             Serial.flush();
-          }else if(strcmp(tipo, "getJsonArmado")==0){
-            StaticJsonDocument<256> doc;
-            doc[F("tipo")] = F("RAM");
-            doc[F("datos")] = jsonArmado;
-            serializeJsonPretty(doc, Serial);
-            Serial.flush();
           }else if(strcmp(tipo, "getRam")==0){
             StaticJsonDocument<256> doc;
             doc[F("tipo")] = F("RAM");
