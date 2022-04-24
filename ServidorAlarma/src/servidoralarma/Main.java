@@ -134,8 +134,6 @@ public class Main {
                     servidor.armAlarm();
                 } else if (entradaTeclado.startsWith("disarmAlarm")) {
                     servidor.disarmAlarm();
-                } else if (entradaTeclado.startsWith("getJsonArmado")) {
-                    servidor.getJsonArmado();
                 } else if (entradaTeclado.startsWith("getRam")) {
                     servidor.getRam();
                 } else if (entradaTeclado.startsWith("getLoops")) {
@@ -161,7 +159,6 @@ public class Main {
                     servidor.escribe("disarmAlarm   Desarma el sistema de alarma");
                     servidor.escribe("getSensors    Obtiene la configuracion de los sensores");
                     servidor.escribe("setSensors    Establece la configuracion de los sensores con la info de la BD");
-                    servidor.escribe("getJsonArmado Muestra el contenido de la variable jsonArmado");
                     servidor.escribe("getRam        Muestra la cantidad de RAM en bytes disponibles en la placa Arduino");
                     servidor.escribe("getLoops      Muestra el numero de loops cada 10 segundos");
                     servidor.escribe("exit          Finaliza el servidor");

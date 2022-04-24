@@ -25,11 +25,11 @@ public class Usuario {
     private final String email;
     private String alias;
     private boolean administrador;
-    private int tagRFID;
+    private long tagRFID;
     private String codigo;
     private String token;
 
-    public Usuario(String email, String alias, boolean administrador, int tagRFID, String codigo, String token) {
+    public Usuario(String email, String alias, boolean administrador, long tagRFID, String codigo, String token) {
         this.email = email;
         this.alias = alias;
         this.administrador = administrador;
@@ -54,11 +54,11 @@ public class Usuario {
         this.administrador = administrador;
     }
 
-    public int getTagRFID() {
+    public long getTagRFID() {
         return tagRFID;
     }
 
-    public void setTagRFID(int tagRFID) {
+    public void setTagRFID(long tagRFID) {
         this.tagRFID = tagRFID;
     }
 

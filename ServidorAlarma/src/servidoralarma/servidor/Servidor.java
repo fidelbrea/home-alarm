@@ -217,11 +217,12 @@ public final class Servidor {
                 mensajeFirebase.getMapDataPayload().put("code", code);
                 mensajeFirebase.setTokens(datosDB.getTokens());
                 mensajeFirebase.start();
-                for (Usuario user : datosDB.getUsers()) {
-                    if (code.equals(user.getCodigo())) {
-                        disarmAlarm();
-                    }
-                }
+// -- el desarmado se hace en la centralita con los datos enviados al armar o prearmar
+//                for (Usuario user : datosDB.getUsers()) {
+//                    if (code.equals(user.getCodigo())) {
+//                        disarmAlarm();
+//                    }
+//                }
             } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
                 escribe(e.toString());
             }
@@ -234,11 +235,12 @@ public final class Servidor {
             mensajeFirebase.getMapDataPayload().put("tag", tag);
             mensajeFirebase.setTokens(datosDB.getTokens());
             mensajeFirebase.start();
-            for (Usuario user : datosDB.getUsers()) {
-                if (tag.equals(String.valueOf(user.getTagRFID()))) {
-                    disarmAlarm();
-                }
-            }
+// -- el desarmado se hace en la centralita con los datos enviados al armar o prearmar
+//            for (Usuario user : datosDB.getUsers()) {
+//                if (tag.equals(String.valueOf(user.getTagRFID()))) {
+//                    disarmAlarm();
+//                }
+//            }
         } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             escribe(e.toString());
         }
@@ -363,13 +365,6 @@ public final class Servidor {
         } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             escribe(e.toString());
         }
-    }
-
-    public void getJsonArmado() {
-        JSONObject obj = new JSONObject();
-        obj.put("tipo", "getJsonArmado");
-        obj.put("datos", "");
-        ManejadorJson.enviarJSON(rs232, obj.toJSONString());
     }
 
     public void getRam() {

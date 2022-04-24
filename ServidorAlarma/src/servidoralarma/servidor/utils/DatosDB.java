@@ -109,7 +109,7 @@ public class DatosDB {
         ResultSet rs = s.executeQuery("select email,alias,es_administrador,tag_rfid,codigo,token from Usuario order by alias asc");
         if (rs != null) {
             while (rs.next()) {
-                users.add(new Usuario(rs.getString(1), rs.getString(2), rs.getBoolean(3), rs.getInt(4), rs.getString(5), rs.getString(6)));
+                users.add(new Usuario(rs.getString(1), rs.getString(2), rs.getBoolean(3), rs.getLong(4), rs.getString(5), rs.getString(6)));
             }
         }
         if (!connection.isClosed()) {
@@ -207,7 +207,7 @@ public class DatosDB {
         return eventMap;
     }
 
-    public void updateUsuario(String email, String alias, boolean administrator, String code, int tag_rfid, String token) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public void updateUsuario(String email, String alias, boolean administrator, String code, long tag_rfid, String token) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         int administrators = 0;
         for (Usuario u : getUsers()) {
             if (!u.getEmail().equals(email) && u.getAlias().equals(alias)) {

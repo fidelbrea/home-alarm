@@ -54,7 +54,7 @@ public class PuertoSerieEscuchador implements SerialPortDataListener {
         for (byte b : newData) {
             mensaje += (char) b;
         }
-
+        
         // si no contiene el inicio de un mensaje JSON, no nos vale
         if (!mensaje.contains(BOL)) {
             mensaje = "";

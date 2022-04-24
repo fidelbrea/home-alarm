@@ -79,7 +79,7 @@ public class Mensaje implements Comparable {
         res += "Tipo msg..: " + tipo.name();
         ts.setTime(tsRecibido);
         res += "\nRecibido..: " + sdf.format(ts);
-        res += "\nDatos.....: " + datos.toString();
+        res += "\nDatos.....: " + ((datos != null)?datos.toString():"<null>");
         return res;
     }
 
