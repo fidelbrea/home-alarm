@@ -13,12 +13,12 @@ CREATE TABLE IF NOT EXISTS `Usuario`(
   `Alias`            VARCHAR(20) NOT NULL UNIQUE,
   `Es_administrador` BOOLEAN DEFAULT FALSE,
   `Token`            VARCHAR(255),
-  `Tag_RFID`         INT,
+  `Tag_RFID`         INT UNSIGNED,
   `Codigo`           VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS `Evento`(
-  `Id`               INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `Id`               INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `Timestamp`        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Descripcion`      VARCHAR(255) NOT NULL
 );
@@ -44,4 +44,3 @@ CREATE TABLE IF NOT EXISTS `Dispara`(
 ALTER TABLE `alarma`.`Dispara`
   ADD FOREIGN KEY (`Id_sensor_dispara`) REFERENCES `alarma`.`Sensor` (`Id`),
   ADD FOREIGN KEY (`Alias_camara_disparada`) REFERENCES `alarma`.`Camara` (`Alias`) ON UPDATE CASCADE;
-
