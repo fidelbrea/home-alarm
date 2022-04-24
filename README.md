@@ -49,7 +49,8 @@ The directory structure used by the server software is as follows:
 {
 "server":{
 	"rmi_port":28803,
-	"serial_port":"/dev/ttyACM0"
+	"serial_port":"/dev/ttyACM0",
+	"prearm_code":"159"
 	},
 "firebase":{
 	"firebase_token":"[firebase_token]",
