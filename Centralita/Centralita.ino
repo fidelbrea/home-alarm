@@ -17,7 +17,7 @@
  
 //--------------------------------------------------------------------
 // Definiciones
-#define CODIGO_ARMAR "159"
+#define VERSION "v1.0"
 
 //--------------------------------------------------------------------
 // Inclusiones
@@ -34,6 +34,7 @@ static Alarma alarma = Alarma();
 static Alimentacion alimentacion = Alimentacion(22, 23);
 static Teclado teclado = Teclado(18, 19);
 static String bufferEntradaSerial;
+static String jsonArmado;
 static EstadoAlarma estadoAlarmaAnterior = alarma.getEstado();
 static uint32_t ultimoContadorLoops;
 
@@ -57,7 +58,7 @@ void setup() {
   // Enviamos el mensaje de inico
   StaticJsonDocument<256> doc;
   doc[F("tipo")] = F("INICIO");
-  doc[F("datos")] = F("v1.0");
+  doc[F("datos")] = F(VERSION);
   serializeJsonPretty(doc, Serial);
   Serial.flush();
 }
@@ -96,27 +97,55 @@ void loop() {
   // Control de acceso. Código numérico
   if(teclado.isCodigoDisponible()){
     String codigoTeclado = teclado.getCodigo();
-    if(codigoTeclado.equals(F(CODIGO_ARMAR))){
-      alarma.pita(1, 1000);
-      if(alarma.getEstado() == EstadoAlarma::DESARMADA)
-        alarma.prearmar();
-    }else{
+    if(alarma.getEstado() == EstadoAlarma::DESARMADA){
       StaticJsonDocument<256> doc;
       doc[F("tipo")] = F("CODIGO");
       doc[F("datos")] = codigoTeclado;
       serializeJsonPretty(doc, Serial);
       Serial.flush();
+    }else{
+      StaticJsonDocument<1024> doc;
+      DeserializationError error = deserializeJson(doc, jsonArmado);
+      if (!error) {
+        if (doc.containsKey(F("tipo")) && doc.containsKey(F("datos"))) {
+          const char* tipo = doc[F("tipo")];
+          for(int i=0; i<doc[F("datos")][F("codigos")].size(); i++){
+            String codigo = doc[F("datos")]["codigos"][i];
+            if(codigoTeclado.equals(codigo)){
+              alarma.desarmar();
+              break;
+            }
+          }
+        }
+      }
     }
   }
 
   // ******************************************************************
   // Control de acceso. Etiqueta RFID
   if(teclado.isTagDisponible()){
-    StaticJsonDocument<256> doc;
-    doc[F("tipo")] = F("TAG");
-    doc[F("datos")] = teclado.getTag();
-    serializeJsonPretty(doc, Serial);
-    Serial.flush();
+    long etiquetaLeida =  teclado.getTag();
+    if(alarma.getEstado() == EstadoAlarma::DESARMADA){
+      StaticJsonDocument<256> doc;
+      doc[F("tipo")] = F("TAG");
+      doc[F("datos")] = etiquetaLeida;
+      serializeJsonPretty(doc, Serial);
+      Serial.flush();
+    }else{
+      StaticJsonDocument<1024> doc;
+      DeserializationError error = deserializeJson(doc, jsonArmado);
+      if (!error) {
+        if (doc.containsKey(F("tipo")) && doc.containsKey(F("datos"))) {
+          const char* tipo = doc[F("tipo")];
+          for(int i=0; i<doc[F("datos")][F("etiquetas")].size(); i++){
+            if(etiquetaLeida == doc[F("datos")]["etiquetas"][i]){
+              alarma.desarmar();
+              break;
+            }
+          }
+        }
+      }
+    }
   }
   
   // ******************************************************************
@@ -154,12 +183,14 @@ void serialEvent() {
   if(bufferEntradaSerial.length()>0){
     if(bufferEntradaSerial.indexOf(F("{"))==-1){
       bufferEntradaSerial = "";
+      Serial.println("borrado 1"); Serial.flush();
       // Se borra el buffer por no encontrar el signo de inicio '{'
-    }else if(bufferEntradaSerial.length()>512){
+    }else if(bufferEntradaSerial.length()>1024){
       bufferEntradaSerial="";
+      Serial.println("borrado 2"); Serial.flush();
       // Se borra por ser demasiado grande para manejarlo
     }else if(bufferEntradaSerial.indexOf(F("}"))>0){
-      StaticJsonDocument<512> doc;
+      StaticJsonDocument<1024> doc;
       DeserializationError error = deserializeJson(doc, bufferEntradaSerial);
       if (!error) {
         if (doc.containsKey(F("tipo")) && doc.containsKey(F("datos"))) {
@@ -167,11 +198,21 @@ void serialEvent() {
   
           // Interpretamos el mensaje recibido
           if(strcmp(tipo, "armar")==0){
-            for(int nSensor = 0; nSensor<alarma.getNumSensores(); nSensor++){
-              alarma.getSensor(nSensor)->setHabilitado(doc[F("datos")][nSensor*2]);
-              alarma.getSensor(nSensor)->setPredisparo(doc[F("datos")][(nSensor*2)+1]);
+            jsonArmado = bufferEntradaSerial;
+            for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
+              JsonObject sensor = doc[F("datos")][F("sensores")][i];
+              alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
+              alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
             }
             alarma.armar();
+          }else if(strcmp(tipo, "prearmar")==0){
+            jsonArmado = bufferEntradaSerial;
+            for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
+              JsonObject sensor = doc[F("datos")][F("sensores")][i];
+              alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
+              alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
+            }
+            alarma.prearmar();
           }else if(strcmp(tipo, "desarmar")==0){
             alarma.desarmar();
           }else if(strcmp(tipo, "getAlarmState")==0){
