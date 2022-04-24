@@ -365,6 +365,13 @@ public final class Servidor {
         }
     }
 
+    public void getJsonArmado() {
+        JSONObject obj = new JSONObject();
+        obj.put("tipo", "getJsonArmado");
+        obj.put("datos", "");
+        ManejadorJson.enviarJSON(rs232, obj.toJSONString());
+    }
+
     public void getRam() {
         JSONObject obj = new JSONObject();
         obj.put("tipo", "getRam");
