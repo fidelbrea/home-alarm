@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import lipermi.exception.LipeRMIException;
 import lipermi.handler.CallHandler;
 import lipermi.net.Server;
@@ -52,6 +53,7 @@ public final class Servidor {
 
     private int puertoServidorRMI;
     private String puertoSerie;
+    private String codigoPrearmado;
 
     private final DatosDB datosDB;
     private SerialPort rs232;
@@ -82,6 +84,7 @@ public final class Servidor {
                 JSONObject jsonServer = (JSONObject) jsonObject.get("server");
                 this.puertoServidorRMI = ((Long) jsonServer.get("rmi_port")).intValue();
                 this.puertoSerie = (String) jsonServer.get("serial_port");
+                this.codigoPrearmado = (String) jsonServer.get("prearm_code");
             }
         } catch (ParseException e) {
             System.out.println("- error leyendo los datos de configuracion desde Servidor.");
@@ -181,18 +184,47 @@ public final class Servidor {
     }
 
     public void handleCode(String code) {
-        try {
-            MensajeFirebaseThread mensajeFirebase = new MensajeFirebaseThread(this);
-            mensajeFirebase.getMapDataPayload().put("code", code);
-            mensajeFirebase.setTokens(datosDB.getTokens());
-            mensajeFirebase.start();
-            for (Usuario user : datosDB.getUsers()) {
-                if (code.equals(user.getCodigo())) {
-                    disarmAlarm();
+        if(code.equals(codigoPrearmado)){
+            try {
+                JSONArray aSensores = new JSONArray();
+                for (Sensor sensor : datosDB.getSensors()) {
+                    HashMap<String,Object>aSensor = new HashMap<>();
+                    aSensor.put("id", sensor.getId());
+                    aSensor.put("habilitado", sensor.isEnabled());
+                    aSensor.put("retardado", sensor.isDelayed());
+                    aSensores.add(new JSONObject(aSensor));
                 }
+                JSONArray aCodigos = new JSONArray();
+                JSONArray aEtiquetas = new JSONArray();
+                for(Usuario u : datosDB.getUsers()){
+                    aCodigos.add(u.getCodigo());
+                    aEtiquetas.add(u.getTagRFID());
+                }
+                HashMap<String,Object> datosArmado = new HashMap<>();
+                datosArmado.put("sensores", aSensores);
+                datosArmado.put("codigos", aCodigos);
+                datosArmado.put("etiquetas", aEtiquetas);
+                JSONObject obj = new JSONObject();
+                obj.put("tipo","prearmar");
+                obj.put("datos",new JSONObject(datosArmado));
+                ManejadorJson.enviarJSON(rs232, obj.toJSONString());
+            } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                escribe(e.toString());
+            }        
+        }else{
+            try {
+                MensajeFirebaseThread mensajeFirebase = new MensajeFirebaseThread(this);
+                mensajeFirebase.getMapDataPayload().put("code", code);
+                mensajeFirebase.setTokens(datosDB.getTokens());
+                mensajeFirebase.start();
+                for (Usuario user : datosDB.getUsers()) {
+                    if (code.equals(user.getCodigo())) {
+                        disarmAlarm();
+                    }
+                }
+            } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                escribe(e.toString());
             }
-        } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            escribe(e.toString());
         }
     }
 
@@ -215,14 +247,27 @@ public final class Servidor {
 
     public void armAlarm() {
         try {
-            JSONArray aSensors = new JSONArray();
-            for (Sensor sensor : datosDB.getSensors("order by id asc")) {
-                aSensors.add(sensor.isEnabled());
-                aSensors.add(sensor.isDelayed());
+            JSONArray aSensores = new JSONArray();
+            for (Sensor sensor : datosDB.getSensors()) {
+                HashMap<String,Object>aSensor = new HashMap<>();
+                aSensor.put("id", sensor.getId());
+                aSensor.put("habilitado", sensor.isEnabled());
+                aSensor.put("retardado", sensor.isDelayed());
+                aSensores.add(new JSONObject(aSensor));
             }
+            JSONArray aCodigos = new JSONArray();
+            JSONArray aEtiquetas = new JSONArray();
+            for(Usuario u : datosDB.getUsers()){
+                aCodigos.add(u.getCodigo());
+                aEtiquetas.add(u.getTagRFID());
+            }
+            HashMap<String,Object> datosArmado = new HashMap<>();
+            datosArmado.put("sensores", aSensores);
+            datosArmado.put("codigos", aCodigos);
+            datosArmado.put("etiquetas", aEtiquetas);
             JSONObject obj = new JSONObject();
-            obj.put("tipo", "armar");
-            obj.put("datos", aSensors);
+            obj.put("tipo","armar");
+            obj.put("datos",new JSONObject(datosArmado));
             ManejadorJson.enviarJSON(rs232, obj.toJSONString());
         } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             escribe(e.toString());
