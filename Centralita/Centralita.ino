@@ -124,7 +124,7 @@ void loop() {
   // ******************************************************************
   // Control de acceso. Etiqueta RFID
   if(teclado.isTagDisponible()){
-    long etiquetaLeida =  teclado.getTag();
+    unsigned long etiquetaLeida =  teclado.getTag();
     if(alarma.getEstado() == EstadoAlarma::DESARMADA){
       StaticJsonDocument<256> doc;
       doc[F("tipo")] = F("TAG");
