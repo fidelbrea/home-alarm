@@ -1,5 +1,7 @@
 # Home alarm
 
+![home-alarm-card](https://brea.synology.me/img/home-alarm-card.png)
+
 Home alarm is a final degree project that develops a complete wired alarm system for a home or shop.
 
 The project focuses on software development. However, there is a few information about electrical and electronic components.
