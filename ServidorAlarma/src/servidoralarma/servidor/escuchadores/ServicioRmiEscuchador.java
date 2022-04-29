@@ -33,12 +33,12 @@ public class ServicioRmiEscuchador implements IServerListener {
     }
     @Override
     public void clientDisconnected(Socket socket) {
-        servidor.escribe("Cliente " + socket.getInetAddress().getHostAddress() + " (" + socket.getInetAddress().getHostName() + ") desconectado");
+        //servidor.escribe("Cliente " + socket.getInetAddress().getHostAddress() + " (" + socket.getInetAddress().getHostName() + ") desconectado");
     }
 
     @Override
     public void clientConnected(Socket socket) {
-        servidor.escribe("Cliente " + socket.getInetAddress().getHostAddress() + " (" + socket.getInetAddress().getHostName() + ") conectado");
+        //servidor.escribe("Cliente " + socket.getInetAddress().getHostAddress() + " (" + socket.getInetAddress().getHostName() + ") conectado");
     }
 
 }
