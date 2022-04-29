@@ -75,7 +75,7 @@ public class EventsActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
         TextView txtMessage = findViewById(R.id.pageTitle);
-        txtMessage.setText(getString(R.string.cameras));
+        txtMessage.setText(cameraName);
 
         AdapterMenuItem adapter = new AdapterMenuItem(this);
 

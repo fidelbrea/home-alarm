@@ -76,7 +76,7 @@ public class PhotosActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
         TextView txtMessage = findViewById(R.id.pageTitle);
-        txtMessage.setText(getString(R.string.cameras));
+        txtMessage.setText(cameraName);
 
         AdapterMenuItem adapter = new AdapterMenuItem(this);
 
@@ -121,6 +121,7 @@ public class PhotosActivity extends AppCompatActivity {
                                     }
                                     Intent intent = new Intent(getApplicationContext(), ShowPictureActivity.class);
                                     intent.putExtra("picture_filename", fileName);
+                                    intent.putExtra("camera", cameraName);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 }

@@ -51,9 +51,16 @@ public class AsyncTaskListSettingSensors extends AsyncTask<String, Void, String>
             }
             Collections.sort(sensorsList);
             for(String sensor : sensorsList) {
-                boolean enabled = jsonObject.getBoolean(sensor);
-                MenuItem menuItem = new MenuItem(sensor, context.getDrawable((enabled) ? R.drawable.ic_sensor_mask : R.drawable.ic_sensor_disabled), R.drawable.ic_button_icon_mask);
-                adapter.add(menuItem);
+                if(jsonObject.getBoolean(sensor)) {
+                    MenuItem menuItem = new MenuItem(sensor, context.getDrawable(R.drawable.ic_sensor_mask), R.drawable.ic_button_icon_mask);
+                    adapter.add(menuItem);
+                }
+            }
+            for(String sensor : sensorsList) {
+                if(!jsonObject.getBoolean(sensor)) {
+                    MenuItem menuItem = new MenuItem(sensor, context.getDrawable(R.drawable.ic_sensor_disabled), R.drawable.ic_button_icon_mask);
+                    adapter.add(menuItem);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

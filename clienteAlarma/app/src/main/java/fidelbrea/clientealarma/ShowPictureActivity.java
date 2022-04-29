@@ -24,6 +24,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ShowPictureActivity extends AppCompatActivity {
 
+    private String cameraName;
     private Drawable drawable;
 
     @Override
@@ -42,6 +43,11 @@ public class ShowPictureActivity extends AppCompatActivity {
             String fileName = extras.getString("picture_filename");
             File filePath = getFileStreamPath(fileName);
             drawable = Drawable.createFromPath(filePath.toString());
+            String cameraNameTemp = getIntent().getExtras().get("camera").toString();
+            if(cameraNameTemp == null){
+                this.finish();
+            }
+            cameraName = cameraNameTemp;
         } catch (Exception e) {
             e.printStackTrace();
             ShowPictureActivity.this.finish();
@@ -64,7 +70,7 @@ public class ShowPictureActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
         TextView txtMessage = findViewById(R.id.pageTitle);
-        txtMessage.setText(getString(R.string.cameras));
+        txtMessage.setText(cameraName);
 
         ImageView imageView = findViewById(R.id.imgCamera);
         imageView.setImageDrawable(drawable);
