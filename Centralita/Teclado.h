@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
- #ifndef Teclado_h
+#ifndef Teclado_h
 #define Teclado_h
 
 #include "Arduino.h"
@@ -34,10 +34,10 @@ class Teclado {
     unsigned long getTag();
 
   private:
-    boolean teclaPulsada(unsigned long tecla);
+    boolean       teclaPulsada();
     Wiegand       wiegand;
     char          codigo[255];
-    String codigoPublico;
+    String        codigoPublico;
     unsigned long tagPublico;
     byte          indiceCodigo;
     unsigned long tsCodigo = 0; // Marca de tiempo de la última pulsación

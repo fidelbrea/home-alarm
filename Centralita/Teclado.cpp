@@ -25,9 +25,9 @@ Teclado::Teclado(byte pinD0, byte pinD1){
 
 boolean Teclado::isCodigoDisponible(){
   if (wiegand.available()) {
-    switch (wiegand.getWiegandType()) {
+    switch (wiegand.getTipoWiegand()) {
       case 4: case 8:
-        return teclaPulsada(wiegand.getCode());
+        return teclaPulsada();
         break;
     }
   }
@@ -36,9 +36,9 @@ boolean Teclado::isCodigoDisponible(){
 
 boolean Teclado::isTagDisponible(){
   if (wiegand.available()) {
-    switch (wiegand.getWiegandType()) {
+    switch (wiegand.getTipoWiegand()) {
       case 24: case 26: case 32: case 34:
-        tagPublico = wiegand.getCode();
+        tagPublico = wiegand.getCodigo();
         return true;
         break;
     }
@@ -46,7 +46,8 @@ boolean Teclado::isTagDisponible(){
   return false;
 }
 
-boolean Teclado::teclaPulsada(unsigned long tecla) {
+boolean Teclado::teclaPulsada() {
+  unsigned long tecla = wiegand.getCodigo();
   if (tecla == TECLA_INICIO) {
     tsCodigo = millis();
     indiceCodigo = 0;
@@ -54,11 +55,11 @@ boolean Teclado::teclaPulsada(unsigned long tecla) {
     if ((millis() - tsCodigo) < T_PULSACION) {
       if (tecla == TECLA_FINAL) {
         codigo[indiceCodigo] = '\0';
-        tsCodigo -= T_PULSACION;
+        tsCodigo = 0;
         codigoPublico = String(codigo);
         return true;
       } else {
-        codigo[indiceCodigo] = 48 + tecla; // guardamos el código ASCII
+        codigo[indiceCodigo] = tecla; // guardamos el código ASCII
         indiceCodigo++;
         tsCodigo = millis();
       }
