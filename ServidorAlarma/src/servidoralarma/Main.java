@@ -37,7 +37,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import servidoralarma.servidor.Servidor;
 import servidoralarma.servidor.hilos.MensajeFirebaseThread;
-import servidoralarma.servidor.objetos.TipoMensaje;
 
 /**
  *
