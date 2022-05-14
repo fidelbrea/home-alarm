@@ -80,6 +80,29 @@ Be sure to customize the RMI service port in the `integers.xml` file and the RMI
 
 You may also need to download the `google-services.json` file from Firebase. (see https://firebase.google.com/docs/android/setup)
 
+## Hardware
+
+In this section, a BOM (bill of materials) is proposed with the intention of generate a final product, however, the alarm client and the SQL database can be hosted on any hardware on the home network.
+
+Alarm switchboard
+- [ ] Arduino MEGA 2560 Rev 3
+- [ ] Proto-board
+- [ ] PNP transistor (2n2222 or similar)
+- [ ] 10KOhm resistor
+
+Server
+- [ ] Raspberry Pi 3 B+
+- [ ] SD card (example: 128GB Class10 U3 V30)
+
+Others
+- [ ] Wiegand entry controller with numeric keyboard and RFID reader
+- [ ] Movement sensors (example: Pyronix KX10DTP)
+- [ ] Opening door and window sensors (example: MC-38)
+- [ ] IP camera(s) ONVIF and/or RTSP compatible
+- [ ] Siren (example: AS210N)
+- [ ] USB cable (USB-A to USB-B)
+- [ ] 6 wires cable (0,18 mm<sub>2</sup>)
+
 ## Author
 
 The author of this project is Fidel Brea (https://github.com/fidelbrea)
