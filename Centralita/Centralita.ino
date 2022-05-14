@@ -97,13 +97,12 @@ void loop() {
   // Control de acceso. Código numérico
   if(teclado.isCodigoDisponible()){
     String codigoTeclado = teclado.getCodigo();
-    if(alarma.getEstado() == EstadoAlarma::DESARMADA){
-      StaticJsonDocument<256> doc;
-      doc[F("tipo")] = F("CODIGO");
-      doc[F("datos")] = codigoTeclado;
-      serializeJsonPretty(doc, Serial);
-      Serial.flush();
-    }else{
+    StaticJsonDocument<256> doc;
+    doc[F("tipo")] = F("CODIGO");
+    doc[F("datos")] = codigoTeclado;
+    serializeJsonPretty(doc, Serial);
+    Serial.flush();
+    if(alarma.getEstado() != EstadoAlarma::DESARMADA){
       StaticJsonDocument<1024> doc;
       DeserializationError error = deserializeJson(doc, jsonArmado);
       if (!error) {
@@ -126,13 +125,12 @@ void loop() {
   // Control de acceso. Etiqueta RFID
   if(teclado.isTagDisponible()){
     unsigned long etiquetaLeida =  teclado.getTag();
-    if(alarma.getEstado() == EstadoAlarma::DESARMADA){
-      StaticJsonDocument<256> doc;
-      doc[F("tipo")] = F("TAG");
-      doc[F("datos")] = etiquetaLeida;
-      serializeJsonPretty(doc, Serial);
-      Serial.flush();
-    }else{
+    StaticJsonDocument<256> doc;
+    doc[F("tipo")] = F("TAG");
+    doc[F("datos")] = etiquetaLeida;
+    serializeJsonPretty(doc, Serial);
+    Serial.flush();
+    if(alarma.getEstado() != EstadoAlarma::DESARMADA){
       StaticJsonDocument<1024> doc;
       DeserializationError error = deserializeJson(doc, jsonArmado);
       if (!error) {
