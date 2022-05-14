@@ -198,21 +198,25 @@ void serialEvent() {
   
           // Interpretamos el mensaje recibido
           if(strcmp(tipo, "armar")==0){
-            jsonArmado = bufferEntradaSerial;
-            for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
-              JsonObject sensor = doc[F("datos")][F("sensores")][i];
-              alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
-              alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
+            if(alarma.getEstado() == EstadoAlarma::DESARMADA){
+              jsonArmado = bufferEntradaSerial;
+              for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
+                JsonObject sensor = doc[F("datos")][F("sensores")][i];
+                alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
+                alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
+              }
+              alarma.armar();
             }
-            alarma.armar();
           }else if(strcmp(tipo, "prearmar")==0){
-            jsonArmado = bufferEntradaSerial;
-            for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
-              JsonObject sensor = doc[F("datos")][F("sensores")][i];
-              alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
-              alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
+            if(alarma.getEstado() == EstadoAlarma::DESARMADA){
+              jsonArmado = bufferEntradaSerial;
+              for(int i=0; i<doc[F("datos")][F("sensores")].size(); i++){
+                JsonObject sensor = doc[F("datos")][F("sensores")][i];
+                alarma.getSensor(((int)sensor["id"])-1)->setHabilitado(sensor["habilitado"]);
+                alarma.getSensor(((int)sensor["id"])-1)->setPredisparo(sensor["retardado"]);
+              }
+              alarma.prearmar();
             }
-            alarma.prearmar();
           }else if(strcmp(tipo, "desarmar")==0){
             jsonArmado = "";
             alarma.desarmar();
