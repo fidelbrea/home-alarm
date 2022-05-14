@@ -103,6 +103,8 @@ Others
 - [ ] USB cable (USB-A to USB-B)
 - [ ] 6 wires cable (0,18 mm<sub>2</sup>)
 
+Pay attention to the dimensioning of the power supply, the current consumption of the motion sensors, the siren when it is sounding and the battery capacity.
+
 ## Author
 
 The author of this project is Fidel Brea (https://github.com/fidelbrea)
