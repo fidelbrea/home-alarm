@@ -88,7 +88,7 @@ Alarm switchboard
 - [ ] Arduino MEGA 2560 Rev 3
 - [ ] Proto-board
 - [ ] PNP transistor (2n2222 or similar)
-- [ ] 10KOhm resistor
+- [ ] 1KOhm resistor
 
 Server
 - [ ] Raspberry Pi 3 B+
