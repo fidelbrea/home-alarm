@@ -82,7 +82,7 @@ You may also need to download the `google-services.json` file from Firebase. (se
 
 ## Hardware
 
-In this section, a BOM (bill of materials) is proposed with the intention of generate a final product, however, the alarm client and the SQL database can be hosted on any hardware on the home network.
+In this section I am proposing a BOM (bill of materials) with the intention of generating a final product based on the prototype. For example, the alarm client and SQL database can be hosted on any hardware on the home network, and I use a Raspberry Pi for this. You can use a NAS, for example, if you already have one.
 
 Alarm switchboard
 - [ ] Arduino MEGA 2560 Rev 3
