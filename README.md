@@ -101,7 +101,7 @@ Others
 - [ ] IP camera(s) ONVIF and/or RTSP compatible
 - [ ] Siren (example: AS210N)
 - [ ] USB cable (USB-A to USB-B)
-- [ ] 6 wires cable (0,18 mm<sub>2</sup>)
+- [ ] 6 wires cable (0,18 mm<sup>2</sup>)
 - [ ] Power supply 12VDC with UPS function (example: DRC-60A)
 - [ ] 12V battery (example: 12V 4.2Ah)
 - [ ] Safety box (example: PAR-116)
