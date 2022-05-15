@@ -95,13 +95,16 @@ Server
 - [ ] SD card (example: 128GB Class10 U3 V30)
 
 Others
-- [ ] Wiegand entry controller with numeric keyboard and RFID reader
+- [ ] Wiegand entry controller with numeric keyboard and RFID reader (example: KR602-M)
 - [ ] Movement sensors (example: Pyronix KX10DTP)
 - [ ] Opening door and window sensors (example: MC-38)
 - [ ] IP camera(s) ONVIF and/or RTSP compatible
 - [ ] Siren (example: AS210N)
 - [ ] USB cable (USB-A to USB-B)
 - [ ] 6 wires cable (0,18 mm<sub>2</sup>)
+- [ ] Power supply 12VDC with UPS function (example: DRC-60A)
+- [ ] 12V battery (example: 12V 4.2Ah)
+- [ ] Safety box (example: PAR-116)
 
 Pay attention to the dimensioning of the power supply, the current consumption of the motion sensors, the siren when it is sounding and the battery capacity.
 
