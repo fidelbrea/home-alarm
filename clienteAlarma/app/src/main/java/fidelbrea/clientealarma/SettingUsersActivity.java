@@ -58,7 +58,7 @@ public class SettingUsersActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
         TextView txtMessage = findViewById(R.id.pageTitle);
-        txtMessage.setText(getString(R.string.settings) + " " + getString(R.string.users));
+       txtMessage.setText(getString(R.string.settings) + " " + getString(R.string.users));
 
         AdapterMenuItem adapter = new AdapterMenuItem(this);
 

@@ -25,6 +25,9 @@ import rmi.ServicioRmiInt;
 
 public class AddUserActivity extends AppCompatActivity {
 
+    private static final int MIN_ALIAS_LENGTH = 3;
+    private static final int MAX_ALIAS_LENGTH = 20;
+
     EditText emailTextInput;
     EditText aliasTextInput;
     Button acceptButton;
@@ -89,8 +92,8 @@ public class AddUserActivity extends AppCompatActivity {
                             errorView.setText(getString(R.string.email) + " " + getString(R.string.error_length_short, 6));
                         } else if (aliasTextInput.getText().toString().contentEquals("")) {
                             errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_empty_field));
-                        } else if (aliasTextInput.length()<4 || aliasTextInput.length()>11){
-                            errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_length, 4, 11));
+                        } else if (aliasTextInput.length()<MIN_ALIAS_LENGTH || aliasTextInput.length()>MAX_ALIAS_LENGTH){
+                            errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_length, MIN_ALIAS_LENGTH, MAX_ALIAS_LENGTH));
                         } else {
                             new Thread(new Runnable() {
                                 public void run() {

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,7 +85,19 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
                             ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                             if(itemText.equals(context.getString(R.string.is_admin))) {
                                 // User is administrator
-                                servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), isChecked);
+                                if(isChecked){
+                                    servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), true);
+                                }else{
+                                    if(!servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), false)){
+                                        ((Activity) context).runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast toast = Toast.makeText(context.getApplicationContext(), context.getString(R.string.must_exist_admin), Toast.LENGTH_LONG);
+                                                toast.show();
+                                                buttonView.setChecked(true);
+                                            }
+                                        });
+                                    }
+                                }
                             }else if(itemText.equals(context.getString(R.string.enabled))) {
                                 // Sensor enabled
                                 servicioRmiInt.updateSensorEnabled(((TextView) ((Activity) context).findViewById(R.id.pageTitle)).getText().toString(), isChecked);
@@ -107,7 +120,6 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
                         }
                     }
                 }).start();
-
             }
         });
         listSwitchItem.get(position).setSwitchItem(holder.getSwitchItem());

@@ -52,10 +52,7 @@ public class SettingUserActivity extends AppCompatActivity {
         }
 
         try {
-            String aliasTemp = getIntent().getExtras().get("alias").toString();
-            if (aliasTemp == null)
-                SettingUserActivity.this.finish();
-            alias = aliasTemp;
+            alias = getIntent().getExtras().get("alias").toString();
         }catch (Exception e){
             e.printStackTrace();
             SettingUserActivity.this.finish();
@@ -101,7 +98,8 @@ public class SettingUserActivity extends AppCompatActivity {
         colorAnimTag.setRepeatMode(ValueAnimator.REVERSE);
 
         TextView pageTitle = findViewById(R.id.pageTitle);
-        pageTitle.setText(getString(R.string.settings) + " " + getString(R.string.users));
+        String pageTitleText = getString(R.string.settings) + " " + getString(R.string.users);
+        pageTitle.setText(pageTitleText);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -167,7 +165,7 @@ public class SettingUserActivity extends AppCompatActivity {
         AsyncTaskGetUser asyncTaskGetUser = new AsyncTaskGetUser(this,
                 adapterSwitches,
                 adapterButtons,
-                (TextView) findViewById(R.id.pageTitle),
+                pageTitle,
                 (TextView) findViewById(R.id.textEmail),
                 (TextView) findViewById(R.id.textCode),
                 (TextView) findViewById(R.id.textTag)
@@ -284,10 +282,7 @@ public class SettingUserActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 try {
-                    String aliasTemp = data.getExtras().get("alias").toString();
-                    if (aliasTemp == null)
-                        SettingUserActivity.this.finish();
-                    alias = aliasTemp;
+                    alias = data.getExtras().get("alias").toString();
                 }catch (Exception e){
                     e.printStackTrace();
                     SettingUserActivity.this.finish();
