@@ -251,8 +251,22 @@ public class DatosDB {
         executeUpdate("update Usuario set tag_rfid='" + tag + "' where email='" + email + "'");
     }
 
-    public void updateUserAdmin(String email, boolean admin) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public boolean updateUserAdmin(String email, boolean admin) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        int administrators = 0;
+        boolean isAdmin = false;
+        for (Usuario u : getUsers()) {
+            if (u.isAdministrador()) {
+                administrators++;
+                if (u.getEmail().equals(email)) {
+                    isAdmin = true;
+                }
+            }
+        }
+        if (isAdmin && administrators == 1) {
+            return false;
+        }
         executeUpdate("update Usuario set es_administrador=" + (admin ? "true" : "false") + " where email='" + email + "'");
+        return true;
     }
 
     public void updateSensorEnabled(String alias, boolean enabled) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -317,15 +331,11 @@ public class DatosDB {
         int administrators = 0;
         boolean isAdmin = false;
         for (Usuario u : getUsers()) {
-            if (u.getAlias().equals(alias)) {
-                if (u.isAdministrador()) {
-                    isAdmin = true;
-                } else {
-                    break;
-                }
-            }
             if (u.isAdministrador()) {
                 administrators++;
+                if (u.getAlias().equals(alias)) {
+                    isAdmin = true;
+                }
             }
         }
         if (isAdmin && administrators == 1) {

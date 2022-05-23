@@ -343,12 +343,14 @@ public class ServicioRmiImp implements ServicioRmiInt {
     }
 
     @Override
-    public void updateUserAdmin(String email, boolean admin) {
+    public boolean updateUserAdmin(String email, boolean admin) {
+        boolean res = false;
         try{
-            servidor.getDatosDB().updateUserAdmin(email, admin);
+            res = servidor.getDatosDB().updateUserAdmin(email, admin);
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
             servidor.escribe(e.toString());
         }
+        return res;
     }
 
     @Override
