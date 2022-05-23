@@ -60,7 +60,7 @@ public interface ServicioRmiInt {
 
     public void updateUserCode(String email, String code);
 
-    public void updateUserAdmin(String email, boolean admin);
+    public boolean updateUserAdmin(String email, boolean admin);
 
     public boolean isAdministrator(String email);
 
