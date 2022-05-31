@@ -80,6 +80,8 @@ Be sure to customize the RMI service port in the `integers.xml` file and the RMI
 
 You may also need to download the `google-services.json` file from Firebase. (see https://firebase.google.com/docs/android/setup)
 
+![app_example](http://brea.synology.me/img/app_example.png)
+
 ## Hardware
 
 In this section I am proposing a BOM (bill of materials) with the intention of generating a final product based on the prototype. For example, the alarm client and SQL database can be hosted on any hardware on the home network, and I use a Raspberry Pi for this. You can use a NAS, for example, if you already have one.
