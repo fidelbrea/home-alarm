@@ -1,9 +1,23 @@
+<!--
+  ~ Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
     <!-- App info -->
     <string name="app_name">Home Alarm</string>
-
-    <!-- Alarm server info -->
-    <string name="url_server" translatable="false">[put_your_RMI_server_here]</string>
 
     <!-- Firebase Cloud Messaging server info -->
     <string name="default_notification_channel_id" translatable="false">alarma_vivienda</string>
@@ -12,10 +26,6 @@
     <string name="msg_subscribed">Subscribed to alarm channel</string>
     <string name="msg_subscribe_failed">Failed to subscribe to alarm channel</string>
     <string name="fcm_message">FCM message</string>
-
-    <!-- Testing messages (to be deleted) -->
-    <string name="txtTest" translatable="false">Test text</string>
-    <string name="error" translatable="false">Something went wrong</string>
 
     <!-- Menu buttons -->
     <string name="alarm">Alarm</string>
@@ -90,7 +100,7 @@
     <string name="error_email_not_authorized">Email not authorized</string>
     <string name="email_sent">Email sent</string>
     <string name="reset_passwd_email_sent">A reset password link is sent to your registered email</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="add_user">Add user</string>
     <string name="user_added">User added</string>
     <string name="user_not_added">User not added. Data could be duplicated.</string>
@@ -111,4 +121,11 @@
     <string name="new_alias">New alias</string>
     <string name="alias_modified">Alias modified</string>
     <string name="error_not_accepted">is not accepted by server. Is it already used?</string>
+    <string name="local_settings">Local settings</string>
+    <string name="url_server">URL server</string>
+    <string name="port_server">Port of server</string>
+    <string name="apply_changes">Apply changes</string>
+    <string name="local_settings_updated">Local settigns updated</string>
+    <string name="server_config_error">I can not connect to server</string>
+    <string name="error_need_admin_sing_up">You need to be singed up at server by administrator user.</string>
 </resources>

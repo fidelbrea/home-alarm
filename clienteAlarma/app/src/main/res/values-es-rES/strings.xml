@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
     <string name="app_name" translatable="false">Alarma Casa</string>
-    <string name="url_server" translatable="false">[put_your_RMI_server_here]</string>
     <string name="default_notification_channel_id" translatable="false">alarma_vivienda</string>
     <string name="default_notification_channel_name" translatable="false">alarma_vivienda</string>
     <string name="default_notification_channel_description">Canal de alarma de casa</string>
     <string name="msg_subscribed">Suscrito al canal de alarma</string>
     <string name="msg_subscribe_failed">No se pudo suscribir al canal de alarma</string>
     <string name="fcm_message">Mensaje de FCM</string>
-    <string name="txtTest" translatable="false">Test text</string>
-    <string name="error" translatable="false">Something went wrong</string>
     <string name="users">Usuarios</string>
     <string name="sensors">Sensores</string>
     <string name="cameras">Cámaras</string>
@@ -47,7 +61,7 @@
     <string name="add_cam">Añadir cámara</string>
     <string name="alias">Alias</string>
     <string name="uri" translatable="false">URI</string>
-    <string name="uri_hint">[rtsp | http]://user:pass@ip:port/...</string>
+    <string name="uri_hint">[rtsp | http]://user:pass@ip:port/…</string>
     <string name="alias_hint">Alias sin espacios</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
@@ -93,4 +107,11 @@
     <string name="new_alias">Nuevo alias</string>
     <string name="alias_modified">Alias modificado</string>
     <string name="error_not_accepted">no es aceptado por el servidor. ¿Ya está siendo usado?</string>
+    <string name="local_settings">Ajustes locales</string>
+    <string name="url_server">URL del servidor</string>
+    <string name="port_server">Puerto del servidor</string>
+    <string name="apply_changes">Aplicar cambios</string>
+    <string name="local_settings_updated">Configuración local actualizada</string>
+    <string name="server_config_error">No se puede conectar con el servidor</string>
+    <string name="error_need_admin_sing_up">Necesita ser dado de alta en el servidor por el administrador.</string>
 </resources>
