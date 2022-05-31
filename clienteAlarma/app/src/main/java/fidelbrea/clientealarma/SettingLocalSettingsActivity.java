@@ -42,15 +42,15 @@ import lipermi.handler.CallHandler;
 import lipermi.net.Client;
 import rmi.ServicioRmiInt;
 
-public class SettingSensorModifyAliasActivity extends AppCompatActivity {
+public class SettingLocalSettingsActivity extends AppCompatActivity {
 
-    private static final int MIN_ALIAS_LENGTH = 3;
-    private static final int MAX_ALIAS_LENGTH = 20;
+    String confServerUrl;
+    Integer confServerPort;
+    Boolean confVibrate;
+    Integer confVibrateDuration;
 
-    private String oldAlias;
-    private EditText aliasTextInput;
-    private Button modifyButton;
-    private Button cancelButton;
+    private EditText serverUrlTextInput;
+    private EditText serverPortTextInput;
     private TextView errorView;
 
     @Override
@@ -59,26 +59,22 @@ public class SettingSensorModifyAliasActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null || !currentUser.isEmailVerified()) {
-            Intent intent = new Intent(SettingSensorModifyAliasActivity.this, WelcomeActivity.class);
+            Intent intent = new Intent(SettingLocalSettingsActivity.this, WelcomeActivity.class);
             startActivity(intent);
-            SettingSensorModifyAliasActivity.this.finish();
+            SettingLocalSettingsActivity.this.finish();
         }
 
-        try {
-            String aliasTemp = getIntent().getExtras().get("alias").toString();
-            if (aliasTemp == null)
-                SettingSensorModifyAliasActivity.this.finish();
-            oldAlias = aliasTemp;
-        } catch (Exception e) {
-            e.printStackTrace();
-            SettingSensorModifyAliasActivity.this.finish();
-        }
+        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        confServerUrl = myPreferences.getString("URL_SERVER", "");
+        confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
+        confVibrate = myPreferences.getBoolean("VIBRATE?", true);
+        confVibrateDuration = myPreferences.getInt("VIBRATE_DURATION", 50);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setContentView(R.layout.activity_modify_alias);
+        setContentView(R.layout.activity_local_settings);
 
         final int mUIFlag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
@@ -91,15 +87,17 @@ public class SettingSensorModifyAliasActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
-        ((TextView) findViewById(R.id.pageTitle)).setText(oldAlias);
+        ((TextView) findViewById(R.id.pageTitle)).setText(getString(R.string.local_settings));
 
-        aliasTextInput = findViewById(R.id.aliasTextInput);
-        aliasTextInput.setHint(oldAlias);
-        modifyButton = findViewById(R.id.modifyButton);
-        cancelButton = findViewById(R.id.cancelButton);
+        Button applyButton = findViewById(R.id.applyButton);
+        Button cancelButton = findViewById(R.id.cancelButton);
+        serverUrlTextInput = findViewById(R.id.serverUrlTextInput);
+        serverUrlTextInput.setText(confServerUrl);
+        serverPortTextInput = findViewById(R.id.serverPortTextInput);
+        serverPortTextInput.setText(confServerPort.toString());
         errorView = findViewById(R.id.errorView);
 
-        modifyButton.setOnClickListener(new View.OnClickListener() {
+        applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
@@ -115,42 +113,45 @@ public class SettingSensorModifyAliasActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        if (aliasTextInput.getText().toString().contentEquals("")) {
-                            errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_empty_field));
-                        } else if (aliasTextInput.length() < MIN_ALIAS_LENGTH || aliasTextInput.length() > MAX_ALIAS_LENGTH) {
-                            errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_length, MIN_ALIAS_LENGTH, MAX_ALIAS_LENGTH));
-                        } else {
-                            new Thread(new Runnable() {
-                                public void run() {
-                                    try {
-                                        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                        String confServerUrl = myPreferences.getString("URL_SERVER", "");
-                                        Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
-                                        CallHandler callHandler = new CallHandler();
-                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
-                                        ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                                        if (servicioRmiInt.modifySensorAlias(oldAlias, aliasTextInput.getText().toString())) {
-                                            runOnUiThread(new Runnable() {
-                                                public void run() {
-                                                    Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.alias_modified), Toast.LENGTH_SHORT);
-                                                    toast.show();
-                                                }
-                                            });
-                                            Intent intent = new Intent();
-                                            intent.putExtra("alias", aliasTextInput.getText().toString());
-                                            setResult(RESULT_OK, intent);
-                                            SettingSensorModifyAliasActivity.this.finish();
-                                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                        } else {
-                                            errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_not_accepted));
+                        new Thread(new Runnable() {
+                            public void run() {
+                                try {
+                                    confServerUrl = serverUrlTextInput.getText().toString();
+                                    confServerPort = Integer.parseInt(serverPortTextInput.getText().toString());
+                                    CallHandler callHandler = new CallHandler();
+                                    Client client = new Client(confServerUrl, confServerPort, callHandler);
+                                    ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
+                                    client.close();
+
+                                    SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences.Editor myEditor = myPreferences.edit();
+                                    myEditor.putString("URL_SERVER", confServerUrl);
+                                    myEditor.putInt("PORT_SERVER", confServerPort);
+                                    myEditor.putBoolean("VIBRATE?", true);
+                                    myEditor.putInt("VIBRATE_DURATION", 50);
+                                    myEditor.apply();
+
+                                    runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.local_settings_updated), Toast.LENGTH_SHORT);
+                                            toast.show();
                                         }
-                                        client.close();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    });
+
+                                    SettingLocalSettingsActivity.this.finish();
+                                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.server_config_error), Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    });
                                 }
-                            }).start();
-                        }
+                            }
+                        }).start();
                     }
                 });
                 view.startAnimation(animation);
@@ -173,7 +174,7 @@ public class SettingSensorModifyAliasActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        SettingSensorModifyAliasActivity.this.finish();
+                        SettingLocalSettingsActivity.this.finish();
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     }
                 });

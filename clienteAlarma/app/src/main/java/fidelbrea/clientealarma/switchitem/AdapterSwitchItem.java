@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma.switchitem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +43,19 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
 
     private final String ON_PREFIX = "on_";
     private final String OFF_PREFIX = "off_";
-    private List<SwitchItem> listSwitchItem = new ArrayList<>();
-    private Context context;
+    private final List<SwitchItem> listSwitchItem = new ArrayList<>();
+    private final Context context;
 
     public AdapterSwitchItem(Context context) {
         this.context = context;
     }
 
-    public void add(SwitchItem switchItem){
+    public void add(SwitchItem switchItem) {
         listSwitchItem.add(switchItem);
         notifyItemInserted(listSwitchItem.size());
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         listSwitchItem.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, listSwitchItem.size());
@@ -46,16 +65,15 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
         return listSwitchItem;
     }
 
-    public void clear(){
+    public void clear() {
         listSwitchItem.clear();
         notifyItemInserted(listSwitchItem.size());
     }
 
 
-
     @Override
     public HolderSwitchItem onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.card_switch,parent,false);
+        View v = LayoutInflater.from(context).inflate(R.layout.card_switch, parent, false);
         return new HolderSwitchItem(v);
     }
 
@@ -68,10 +86,10 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
         holder.getSwitchItem().setTextOff(OFF_PREFIX + listSwitchItem.get(position).getText());
         holder.getSwitchItem().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String itemText = ((Switch)buttonView).getTextOn().toString().substring(ON_PREFIX.length());
+                String itemText = ((Switch) buttonView).getTextOn().toString().substring(ON_PREFIX.length());
                 int position = -1;
-                for(int i=0; i<listSwitchItem.size(); i++){
-                    if(listSwitchItem.get(i).getText().equals(itemText)){
+                for (int i = 0; i < listSwitchItem.size(); i++) {
+                    if (listSwitchItem.get(i).getText().equals(itemText)) {
                         position = i;
                         break;
                     }
@@ -80,15 +98,18 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
                 new Thread(new Runnable() {
                     public void run() {
                         try {
+                            SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                            String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                            Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                             CallHandler callHandler = new CallHandler();
-                            Client client = new Client(context.getString(R.string.url_server), context.getResources().getInteger(R.integer.server_port), callHandler);
+                            Client client = new Client(confServerUrl, confServerPort, callHandler);
                             ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                            if(itemText.equals(context.getString(R.string.is_admin))) {
+                            if (itemText.equals(context.getString(R.string.is_admin))) {
                                 // User is administrator
-                                if(isChecked){
+                                if (isChecked) {
                                     servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), true);
-                                }else{
-                                    if(!servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), false)){
+                                } else {
+                                    if (!servicioRmiInt.updateUserAdmin(((TextView) ((Activity) context).findViewById(R.id.textEmail)).getText().toString(), false)) {
                                         ((Activity) context).runOnUiThread(new Runnable() {
                                             public void run() {
                                                 Toast toast = Toast.makeText(context.getApplicationContext(), context.getString(R.string.must_exist_admin), Toast.LENGTH_LONG);
@@ -98,23 +119,23 @@ public class AdapterSwitchItem extends RecyclerView.Adapter<HolderSwitchItem> {
                                         });
                                     }
                                 }
-                            }else if(itemText.equals(context.getString(R.string.enabled))) {
+                            } else if (itemText.equals(context.getString(R.string.enabled))) {
                                 // Sensor enabled
                                 servicioRmiInt.updateSensorEnabled(((TextView) ((Activity) context).findViewById(R.id.pageTitle)).getText().toString(), isChecked);
-                            }else if(itemText.equals(context.getString(R.string.delayed))) {
+                            } else if (itemText.equals(context.getString(R.string.delayed))) {
                                 // Sensor delayed
                                 servicioRmiInt.updateSensorDelayed(((TextView) ((Activity) context).findViewById(R.id.pageTitle)).getText().toString(), isChecked);
-                            }else {
+                            } else {
                                 // It's a camera alias
-                                if(isChecked){
+                                if (isChecked) {
                                     // associate sensor-camera
                                     servicioRmiInt.associateSensorCamera(((TextView) ((Activity) context).findViewById(R.id.pageTitle)).getText().toString(), itemText);
-                                }else{
+                                } else {
                                     // disassociate sensor-camera
                                     servicioRmiInt.disassociateSensorCamera(((TextView) ((Activity) context).findViewById(R.id.pageTitle)).getText().toString(), itemText);
                                 }
                             }
-                                client.close();
+                            client.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

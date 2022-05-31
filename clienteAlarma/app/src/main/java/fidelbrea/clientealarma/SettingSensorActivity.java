@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
@@ -42,7 +59,7 @@ public class SettingSensorActivity extends AppCompatActivity {
             if (aliasTemp == null)
                 SettingSensorActivity.this.finish();
             alias = aliasTemp;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             SettingSensorActivity.this.finish();
         }
@@ -72,14 +89,14 @@ public class SettingSensorActivity extends AppCompatActivity {
 
         // get sensor info and put it into screen
         AsyncTaskGetSensor asyncTaskGetSensor = new AsyncTaskGetSensor(this, adapterSwitches, adapterButtons, (TextView) findViewById(R.id.pageTitle));
-        asyncTaskGetSensor.execute(getString(R.string.url_server), alias);
+        asyncTaskGetSensor.execute(alias);
 
         LinearLayoutManager l1 = new LinearLayoutManager(this);
         RecyclerView recyclerViewSwitch = findViewById(R.id.rvSwitchApp);
         recyclerViewSwitch.setLayoutManager(l1);
         recyclerViewSwitch.setAdapter(adapterSwitches);
         recyclerViewSwitch.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewSwitch ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerViewSwitch, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         vibrate();
@@ -87,7 +104,8 @@ public class SettingSensorActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongItemClick(View view, int position) {}
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
@@ -96,17 +114,19 @@ public class SettingSensorActivity extends AppCompatActivity {
         recyclerViewButton.setLayoutManager(l2);
         recyclerViewButton.setAdapter(adapterButtons);
         recyclerViewButton.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewButton ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(this, recyclerViewButton, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
-                        animation.setAnimationListener(new Animation.AnimationListener(){
+                        animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
-                            public void onAnimationStart(Animation animation){
+                            public void onAnimationStart(Animation animation) {
                                 vibrate();
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation){}
+                            public void onAnimationRepeat(Animation animation) {
+                            }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
@@ -114,12 +134,12 @@ public class SettingSensorActivity extends AppCompatActivity {
                                     // ToDo launch AsyncTask to synchronize sensor data with server
                                     SettingSensorActivity.this.finish();
                                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                }else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.edit_alias))){
+                                } else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.edit_alias))) {
                                     Intent intent = new Intent(getApplicationContext(), SettingSensorModifyAliasActivity.class);
                                     intent.putExtra("alias", alias);
                                     startActivityForResult(intent, 1);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.associate_with_cams))) {
+                                } else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.associate_with_cams))) {
                                     Intent intent = new Intent(SettingSensorActivity.this, SettingSensorCamsActivity.class);
                                     intent.putExtra("alias", alias);
                                     startActivity(intent);
@@ -130,12 +150,15 @@ public class SettingSensorActivity extends AppCompatActivity {
                         });
                         view.startAnimation(animation);
                     }
-                    @Override public void onLongItemClick(View view, int position) {}
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -147,7 +170,7 @@ public class SettingSensorActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
@@ -156,7 +179,7 @@ public class SettingSensorActivity extends AppCompatActivity {
                     if (aliasTemp == null)
                         SettingSensorActivity.this.finish();
                     alias = aliasTemp;
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     SettingSensorActivity.this.finish();
                 }

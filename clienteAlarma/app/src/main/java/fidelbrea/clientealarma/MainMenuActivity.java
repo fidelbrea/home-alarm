@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.app.NotificationChannel;
@@ -8,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
@@ -15,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -45,42 +64,83 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private BroadcastReceiver broadcastReceiver;
+    String confServerUrl;
+    Integer confServerPort;
+    Boolean confVibrate;
+    Integer confVibrateDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null || !currentUser.isEmailVerified()){
+        if (currentUser == null || !currentUser.isEmailVerified()) {
             Intent intent = new Intent(MainMenuActivity.this, WelcomeActivity.class);
             startActivity(intent);
             MainMenuActivity.this.finish();
         }
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    CallHandler callHandler = new CallHandler();
-                    Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
-                    ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                    final boolean isServerEmailVerified = servicioRmiInt.checkEmail(currentUser.getEmail());
-                    if(!isServerEmailVerified){
-                        currentUser.delete();
-                        mAuth.signOut();
-                        Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
-                        startActivity(intent);
-                        MainMenuActivity.this.finish();
+
+        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        confServerUrl = myPreferences.getString("URL_SERVER", "");
+        confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
+        confVibrate = myPreferences.getBoolean("VIBRATE?", true);
+        confVibrateDuration = myPreferences.getInt("VIBRATE_DURATION", 50);
+
+        if(!confServerUrl.equals("")) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        CallHandler callHandler = new CallHandler();
+                        Client client = new Client(confServerUrl, confServerPort, callHandler);
+                        ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
+                        final boolean isServerEmailVerified = servicioRmiInt.checkEmail(currentUser.getEmail());
+                        if (!isServerEmailVerified) {
+                            currentUser.delete();
+                            mAuth.signOut();
+                            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                            startActivity(intent);
+                            MainMenuActivity.this.finish();
+                        }
+                        client.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    client.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        if(confServerUrl.equals("")) {
+            SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            confServerUrl = myPreferences.getString("URL_SERVER", "");
+            confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        CallHandler callHandler = new CallHandler();
+                        Client client = new Client(confServerUrl, confServerPort, callHandler);
+                        ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
+                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                        final boolean isServerEmailVerified = servicioRmiInt.checkEmail(currentUser.getEmail());
+                        if (!isServerEmailVerified) {
+                            currentUser.delete();
+                            mAuth.signOut();
+                            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                            startActivity(intent);
+                            MainMenuActivity.this.finish();
+                        }
+                        client.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
 
         setContentView(R.layout.activity_with_recyclerview);
         final int mUIFlag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
@@ -101,16 +161,16 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 try {
                     if (intent.getAction().equals("ALARM_STATE")) {
-                        switch(Integer.parseInt(intent.getExtras().get("alarm_state").toString())) {
+                        switch (Integer.parseInt(intent.getExtras().get("alarm_state").toString())) {
                             case 0:
                                 txtMessage.setText(getString(R.string.state_disarmed));
                                 txtMessage.setTextColor(Color.WHITE);
-                                txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                                txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                                 break;
                             case 3:
                                 txtMessage.setText(getString(R.string.state_armed));
                                 txtMessage.setTextColor(Color.GREEN);
-                                txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                                txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                                 break;
                             case 6:
                                 txtMessage.setText(getString(R.string.state_triggered));
@@ -120,10 +180,10 @@ public class MainMenuActivity extends AppCompatActivity {
                             default:
                                 txtMessage.setText(getString(R.string.state_unknown));
                                 txtMessage.setTextColor(Color.WHITE);
-                                txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                                txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                         }
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -172,7 +232,7 @@ public class MainMenuActivity extends AppCompatActivity {
                                 public void run() {
                                     try {
                                         CallHandler callHandler = new CallHandler();
-                                        Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
                                         ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                         servicioRmiInt.registerUser(mAuth.getCurrentUser().getEmail(), token);
                                         client.close();
@@ -181,7 +241,7 @@ public class MainMenuActivity extends AppCompatActivity {
                                     }
                                 }
                             }).start();
-                        }else{
+                        } else {
                             Intent intent = new Intent(MainMenuActivity.this, WelcomeActivity.class);
                             startActivity(intent);
                             MainMenuActivity.this.finish();
@@ -194,18 +254,18 @@ public class MainMenuActivity extends AppCompatActivity {
             public void run() {
                 try {
                     CallHandler callHandler = new CallHandler();
-                    Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                    Client client = new Client(confServerUrl, confServerPort, callHandler);
                     ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                    switch(servicioRmiInt.getAlarmState()) {
+                    switch (servicioRmiInt.getAlarmState()) {
                         case 0:
                             txtMessage.setText(getString(R.string.state_disarmed));
                             txtMessage.setTextColor(Color.WHITE);
-                            txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                            txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                             break;
                         case 3:
                             txtMessage.setText(getString(R.string.state_armed));
                             txtMessage.setTextColor(Color.GREEN);
-                            txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                            txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                             break;
                         case 6:
                             txtMessage.setText(getString(R.string.state_triggered));
@@ -215,7 +275,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         default:
                             txtMessage.setText(getString(R.string.state_unknown));
                             txtMessage.setTextColor(Color.WHITE);
-                            txtMessage.setBackgroundColor(Color.rgb(0x00,0x57, 0x3F));
+                            txtMessage.setBackgroundColor(Color.rgb(0x00, 0x57, 0x3F));
                     }
                     client.close();
                 } catch (Exception e) {
@@ -232,38 +292,39 @@ public class MainMenuActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(l);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
-                        animation.setAnimationListener(new Animation.AnimationListener(){
+                        animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
-                            public void onAnimationStart(Animation animation){
+                            public void onAnimationStart(Animation animation) {
                                 vibrate();
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation){}
+                            public void onAnimationRepeat(Animation animation) {
+                            }
 
                             @Override
-                            public void onAnimationEnd(Animation animation){
-                                if(adapter.getListButtonApp().get(position).getText().equals(getString(R.string.alarm))) {
+                            public void onAnimationEnd(Animation animation) {
+                                if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.alarm))) {
                                     Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if(adapter.getListButtonApp().get(position).getText().equals(getString(R.string.cameras))){
+                                } else if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.cameras))) {
                                     Intent intent = new Intent(getApplicationContext(), CamerasActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if(adapter.getListButtonApp().get(position).getText().equals(getString(R.string.log))){
+                                } else if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.log))) {
                                     Intent intent = new Intent(getApplicationContext(), LogActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if(adapter.getListButtonApp().get(position).getText().equals(getString(R.string.settings))){
+                                } else if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.settings))) {
                                     Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if(adapter.getListButtonApp().get(position).getText().equals(getString(R.string.exit))){
+                                } else if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.exit))) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MainMenuActivity.this);
                                     builder.setMessage(getApplicationContext().getString(R.string.confirm_exit))
                                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -283,7 +344,9 @@ public class MainMenuActivity extends AppCompatActivity {
                         view.startAnimation(animation);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {}
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
@@ -304,14 +367,16 @@ public class MainMenuActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
     }
 
-    private void vibrate(){
+    private void vibrate() {
+        if(confVibrate) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+                v.vibrate(VibrationEffect.createOneShot(confVibrateDuration, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                v.vibrate(50);
+                v.vibrate(confVibrateDuration);
             }
+        }
     }
 
     @Override
@@ -319,7 +384,8 @@ public class MainMenuActivity extends AppCompatActivity {
         if (broadcastReceiver != null) {
             try {
                 unregisterReceiver(broadcastReceiver);
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
             broadcastReceiver = null;
         }
         super.onDestroy();

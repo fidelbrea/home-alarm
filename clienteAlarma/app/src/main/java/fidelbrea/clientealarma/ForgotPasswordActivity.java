@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.DialogInterface;
@@ -46,13 +63,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation animationScale = AnimationUtils.loadAnimation(ForgotPasswordActivity.this,R.anim.button_pressed);
+                Animation animationScale = AnimationUtils.loadAnimation(ForgotPasswordActivity.this, R.anim.button_pressed);
                 resetPasswordButton.startAnimation(animationScale);
                 mAuth.sendPasswordResetEmail(emailTextInput.getText().toString())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     Toast.makeText(ForgotPasswordActivity.this, getString(R.string.email_sent), Toast.LENGTH_SHORT).show();
                                 }
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ForgotPasswordActivity.this);

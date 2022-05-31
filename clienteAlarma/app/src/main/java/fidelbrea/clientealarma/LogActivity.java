@@ -1,11 +1,30 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -69,20 +88,23 @@ public class LogActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 try {
+                    SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                    Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                     CallHandler callHandler = new CallHandler();
-                    Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                    Client client = new Client(confServerUrl, confServerPort, callHandler);
                     ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                     JSONObject jsonRes = new JSONObject(servicioRmiInt.getLastEvents(30));
-                    if(jsonRes.has("events")){
+                    if (jsonRes.has("events")) {
                         JSONArray aEvents = (JSONArray) jsonRes.getJSONArray("events");
                         HashMap<Integer, LogEntryItem> eventMap = new HashMap<>();
-                        for(int i=0; i<aEvents.length(); i++){
+                        for (int i = 0; i < aEvents.length(); i++) {
                             JSONObject jsonEvent = new JSONObject(aEvents.getString(i));
                             eventMap.put(jsonEvent.getInt("id"), new LogEntryItem(jsonEvent.getString("timestamp"), jsonEvent.getString("event")));
                         }
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                for(int i=0; i<eventMap.size(); i++){
+                                for (int i = 0; i < eventMap.size(); i++) {
                                     adapter.add((LogEntryItem) eventMap.get(i));
                                 }
                             }
@@ -126,7 +148,7 @@ public class LogActivity extends AppCompatActivity {
 
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

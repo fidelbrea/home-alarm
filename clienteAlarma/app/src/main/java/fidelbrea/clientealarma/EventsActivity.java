@@ -1,13 +1,32 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -53,7 +72,7 @@ public class EventsActivity extends AppCompatActivity {
             if (cameraNameTemp == null || cameraNameTemp.length() < 3)
                 EventsActivity.this.finish();
             cameraName = cameraNameTemp;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             EventsActivity.this.finish();
         }
@@ -81,14 +100,16 @@ public class EventsActivity extends AppCompatActivity {
 
         // get camera events and pictures in camera directory and put items into adapter
         AsyncTaskListCams asyncTaskListCams = new AsyncTaskListCams(this, adapter);
-        asyncTaskListCams.execute(getString(R.string.url_server), getString(R.string.back), cameraName);
+        asyncTaskListCams.execute(cameraName);
+
         LinearLayoutManager l = new LinearLayoutManager(this);
         RecyclerView recyclerView = findViewById(R.id.rvButtonApp);
         recyclerView.setLayoutManager(l);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
                         animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -111,8 +132,11 @@ public class EventsActivity extends AppCompatActivity {
                                             new Thread(new Runnable() {
                                                 public void run() {
                                                     try {
+                                                        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                        String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                                        Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                                         CallHandler callHandler = new CallHandler();
-                                                        Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
                                                         ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                                         servicioRmiInt.shoot(cameraName, getResources().getInteger(R.integer.amount_of_shoots));
                                                         client.close();
@@ -146,9 +170,9 @@ public class EventsActivity extends AppCompatActivity {
                                         Intent intent = new Intent(getApplicationContext(), PhotosActivity.class);
                                         intent.putExtra("camera", cameraName);
                                         String eventName = adapter.getListButtonApp().get(position).getText();
-                                        eventName = eventName.replace(".","");
-                                        eventName = eventName.replace(" ","");
-                                        eventName = eventName.replace(":","");
+                                        eventName = eventName.replace(".", "");
+                                        eventName = eventName.replace(" ", "");
+                                        eventName = eventName.replace(":", "");
                                         intent.putExtra("event", eventName);
                                         startActivity(intent);
                                         overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -159,7 +183,8 @@ public class EventsActivity extends AppCompatActivity {
                         view.startAnimation(animation);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
                         animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -183,8 +208,11 @@ public class EventsActivity extends AppCompatActivity {
                                                         new Thread(new Runnable() {
                                                             public void run() {
                                                                 try {
+                                                                    SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                                    String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                                                    Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                                                     CallHandler callHandler = new CallHandler();
-                                                                    Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                                                    Client client = new Client(confServerUrl, confServerPort, callHandler);
                                                                     ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                                                     boolean res = servicioRmiInt.deletePicture(cameraName, "", adapter.getListButtonApp().get(position).getText());
                                                                     client.close();
@@ -215,13 +243,16 @@ public class EventsActivity extends AppCompatActivity {
                                                         new Thread(new Runnable() {
                                                             public void run() {
                                                                 try {
+                                                                    SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                                    String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                                                    Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                                                     CallHandler callHandler = new CallHandler();
-                                                                    Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                                                    Client client = new Client(confServerUrl, confServerPort, callHandler);
                                                                     ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                                                     String eventName = adapter.getListButtonApp().get(position).getText();
-                                                                    eventName = eventName.replace(".","");
-                                                                    eventName = eventName.replace(" ","");
-                                                                    eventName = eventName.replace(":","");
+                                                                    eventName = eventName.replace(".", "");
+                                                                    eventName = eventName.replace(" ", "");
+                                                                    eventName = eventName.replace(":", "");
                                                                     boolean res = servicioRmiInt.deleteEvent(cameraName, eventName);
                                                                     client.close();
                                                                     if (res) {
@@ -258,7 +289,7 @@ public class EventsActivity extends AppCompatActivity {
 
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

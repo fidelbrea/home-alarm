@@ -1,11 +1,30 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -50,7 +69,7 @@ public class SettingUserModifyAliasActivity extends AppCompatActivity {
             if (aliasTemp == null)
                 SettingUserModifyAliasActivity.this.finish();
             oldAlias = aliasTemp;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             SettingUserModifyAliasActivity.this.finish();
         }
@@ -72,7 +91,7 @@ public class SettingUserModifyAliasActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
-        ((TextView)findViewById(R.id.pageTitle)).setText(oldAlias);
+        ((TextView) findViewById(R.id.pageTitle)).setText(oldAlias);
 
         aliasTextInput = findViewById(R.id.aliasTextInput);
         aliasTextInput.setHint(oldAlias);
@@ -98,16 +117,19 @@ public class SettingUserModifyAliasActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animation animation) {
                         if (aliasTextInput.getText().toString().contentEquals("")) {
                             errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_empty_field));
-                        } else if (aliasTextInput.length()<MIN_ALIAS_LENGTH || aliasTextInput.length()>MAX_ALIAS_LENGTH){
+                        } else if (aliasTextInput.length() < MIN_ALIAS_LENGTH || aliasTextInput.length() > MAX_ALIAS_LENGTH) {
                             errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_length, MIN_ALIAS_LENGTH, MAX_ALIAS_LENGTH));
                         } else {
                             new Thread(new Runnable() {
                                 public void run() {
                                     try {
+                                        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                        Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                         CallHandler callHandler = new CallHandler();
-                                        Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
                                         ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                                        if(servicioRmiInt.modifyUserAlias(oldAlias, aliasTextInput.getText().toString())){
+                                        if (servicioRmiInt.modifyUserAlias(oldAlias, aliasTextInput.getText().toString())) {
                                             runOnUiThread(new Runnable() {
                                                 public void run() {
                                                     Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.alias_modified), Toast.LENGTH_SHORT);
@@ -119,7 +141,7 @@ public class SettingUserModifyAliasActivity extends AppCompatActivity {
                                             setResult(RESULT_OK, intent);
                                             SettingUserModifyAliasActivity.this.finish();
                                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                        }else{
+                                        } else {
                                             errorView.setText(getString(R.string.alias) + " " + getString(R.string.error_not_accepted));
                                         }
                                         client.close();
@@ -160,7 +182,7 @@ public class SettingUserModifyAliasActivity extends AppCompatActivity {
         });
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

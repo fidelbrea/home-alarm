@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +37,8 @@ import rmi.ServicioRmiInt;
 
 public class AsyncTaskListSettingSensors extends AsyncTask<String, Void, String> {
 
-    private AdapterMenuItem adapter;
-    private Context context;
+    private final AdapterMenuItem adapter;
+    private final Context context;
 
     public AsyncTaskListSettingSensors(Context context, AdapterMenuItem adapter) {
         this.context = context;
@@ -29,8 +48,11 @@ public class AsyncTaskListSettingSensors extends AsyncTask<String, Void, String>
     protected String doInBackground(String... data) {
         String res = "";
         try {
+            SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            String confServerUrl = myPreferences.getString("URL_SERVER", "");
+            Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
             CallHandler callHandler = new CallHandler();
-            Client client = new Client((data[0]), context.getResources().getInteger(R.integer.server_port), callHandler);
+            Client client = new Client(confServerUrl, confServerPort, callHandler);
             ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
             res = servicioRmiInt.getSensorsList();
             client.close();
@@ -45,19 +67,19 @@ public class AsyncTaskListSettingSensors extends AsyncTask<String, Void, String>
             ArrayList<String> sensorsList = new ArrayList<>();
             JSONObject jsonObject = new JSONObject(s);
             Iterator<String> keys = jsonObject.keys();
-            while(keys.hasNext()) {
+            while (keys.hasNext()) {
                 String key = keys.next();
                 sensorsList.add(key);
             }
             Collections.sort(sensorsList);
-            for(String sensor : sensorsList) {
-                if(jsonObject.getBoolean(sensor)) {
+            for (String sensor : sensorsList) {
+                if (jsonObject.getBoolean(sensor)) {
                     MenuItem menuItem = new MenuItem(sensor, context.getDrawable(R.drawable.ic_sensor_mask), R.drawable.ic_button_icon_mask);
                     adapter.add(menuItem);
                 }
             }
-            for(String sensor : sensorsList) {
-                if(!jsonObject.getBoolean(sensor)) {
+            for (String sensor : sensorsList) {
+                if (!jsonObject.getBoolean(sensor)) {
                     MenuItem menuItem = new MenuItem(sensor, context.getDrawable(R.drawable.ic_sensor_disabled), R.drawable.ic_button_icon_mask);
                     adapter.add(menuItem);
                 }

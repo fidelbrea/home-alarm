@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -17,13 +36,13 @@ import rmi.ServicioRmiInt;
 
 public class AsyncTaskGetUser extends AsyncTask<String, Void, String> {
 
-    private Context context;
-    private AdapterSwitchItem adapterSwitches;
-    private AdapterMenuItem adapterButtons;
-    private TextView title;
-    private TextView email;
-    private TextView code;
-    private TextView tag;
+    private final Context context;
+    private final AdapterSwitchItem adapterSwitches;
+    private final AdapterMenuItem adapterButtons;
+    private final TextView title;
+    private final TextView email;
+    private final TextView code;
+    private final TextView tag;
 
     public AsyncTaskGetUser(
             Context context,
@@ -49,8 +68,11 @@ public class AsyncTaskGetUser extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... data) {
         String res = "";
         try {
+            SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            String confServerUrl = myPreferences.getString("URL_SERVER", "");
+            Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
             CallHandler callHandler = new CallHandler();
-            Client client = new Client(context.getString(R.string.url_server), context.getResources().getInteger(R.integer.server_port), callHandler);
+            Client client = new Client(confServerUrl, confServerPort, callHandler);
             ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
             res = servicioRmiInt.getUser(data[0]);
             client.close();
@@ -63,20 +85,20 @@ public class AsyncTaskGetUser extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String s) {
         try {
             JSONObject jsonObject = new JSONObject(s);
-            if(jsonObject.has("alias")) {
+            if (jsonObject.has("alias")) {
                 title.setText(jsonObject.getString("alias"));
             }
-            if(jsonObject.has("email")) {
+            if (jsonObject.has("email")) {
                 email.setText(jsonObject.getString("email"));
             }
-            if(jsonObject.has("is_admin")){
+            if (jsonObject.has("is_admin")) {
                 SwitchItem switchItem = new SwitchItem(context.getString(R.string.is_admin), jsonObject.getBoolean("is_admin"), R.drawable.ic_button_mask);
                 adapterSwitches.add(switchItem);
             }
-            if(jsonObject.has("code")) {
+            if (jsonObject.has("code")) {
                 code.setText(jsonObject.getString("code"));
             }
-            if(jsonObject.has("tag")) {
+            if (jsonObject.has("tag")) {
                 tag.setText(jsonObject.getString("tag"));
             }
 

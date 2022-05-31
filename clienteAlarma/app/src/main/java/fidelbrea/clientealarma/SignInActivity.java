@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -63,7 +82,7 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation animationScale = AnimationUtils.loadAnimation(SignInActivity.this,R.anim.button_pressed);
+                Animation animationScale = AnimationUtils.loadAnimation(SignInActivity.this, R.anim.button_pressed);
                 signInButton.startAnimation(animationScale);
                 if (emailTextInput.getText().toString().contentEquals("")) {
                     errorView.setText(R.string.error_email_empty);
@@ -82,17 +101,25 @@ public class SignInActivity extends AppCompatActivity {
                                                 new Thread(new Runnable() {
                                                     public void run() {
                                                         try {
-                                                            CallHandler callHandler = new CallHandler();
-                                                            Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
-                                                            ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                                                            boolean userAuthorized = servicioRmiInt.checkEmail(user.getEmail());
-                                                            client.close();
-                                                            if(userAuthorized){
+                                                            SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                            String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                                            Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
+                                                            boolean userAuthorized = false;
+                                                            if(confServerUrl.equals("")) {
+                                                                userAuthorized = true;
+                                                            }else{
+                                                                CallHandler callHandler = new CallHandler();
+                                                                Client client = new Client(confServerUrl, confServerPort, callHandler);
+                                                                ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
+                                                                userAuthorized = servicioRmiInt.checkEmail(user.getEmail());
+                                                                client.close();
+                                                            }
+                                                            if (userAuthorized) {
                                                                 Intent intent = new Intent(SignInActivity.this, MainMenuActivity.class);
                                                                 setResult(RESULT_OK, null);
                                                                 startActivity(intent);
                                                                 SignInActivity.this.finish();
-                                                            }else{
+                                                            } else {
                                                                 user.delete();
                                                                 mAuth.signOut();
                                                                 passwordTextInput.setText("");
@@ -128,7 +155,7 @@ public class SignInActivity extends AppCompatActivity {
         forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation animationScale = AnimationUtils.loadAnimation(SignInActivity.this,R.anim.button_pressed);
+                Animation animationScale = AnimationUtils.loadAnimation(SignInActivity.this, R.anim.button_pressed);
                 forgotPasswordButton.startAnimation(animationScale);
                 Intent forgotPasswordActivity = new Intent(SignInActivity.this, ForgotPasswordActivity.class);
                 startActivity(forgotPasswordActivity);

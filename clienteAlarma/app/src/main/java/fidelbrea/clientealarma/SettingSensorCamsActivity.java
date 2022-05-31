@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
@@ -42,7 +59,7 @@ public class SettingSensorCamsActivity extends AppCompatActivity {
             if (aliasTemp == null)
                 SettingSensorCamsActivity.this.finish();
             alias = aliasTemp;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             SettingSensorCamsActivity.this.finish();
         }
@@ -79,7 +96,7 @@ public class SettingSensorCamsActivity extends AppCompatActivity {
         recyclerViewSwitch.setLayoutManager(l1);
         recyclerViewSwitch.setAdapter(adapterSwitches);
         recyclerViewSwitch.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewSwitch ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerViewSwitch, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         vibrate();
@@ -87,7 +104,8 @@ public class SettingSensorCamsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongItemClick(View view, int position) {}
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
@@ -96,17 +114,19 @@ public class SettingSensorCamsActivity extends AppCompatActivity {
         recyclerViewButton.setLayoutManager(l2);
         recyclerViewButton.setAdapter(adapterButtons);
         recyclerViewButton.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewButton ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(this, recyclerViewButton, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
-                        animation.setAnimationListener(new Animation.AnimationListener(){
+                        animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
-                            public void onAnimationStart(Animation animation){
+                            public void onAnimationStart(Animation animation) {
                                 vibrate();
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation){}
+                            public void onAnimationRepeat(Animation animation) {
+                            }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
@@ -119,14 +139,16 @@ public class SettingSensorCamsActivity extends AppCompatActivity {
                         view.startAnimation(animation);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {}
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
 
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

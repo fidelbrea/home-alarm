@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.Context;
@@ -58,31 +75,33 @@ public class SettingSensorsActivity extends AppCompatActivity {
 
         // get sensors list and put items into adapter
         AsyncTaskListSettingSensors asyncTaskListSettingSensors = new AsyncTaskListSettingSensors(this, adapter);
-        asyncTaskListSettingSensors.execute(getString(R.string.url_server), getString(R.string.back));
+        asyncTaskListSettingSensors.execute();
 
         LinearLayoutManager l = new LinearLayoutManager(this);
         RecyclerView recyclerView = findViewById(R.id.rvButtonApp);
         recyclerView.setLayoutManager(l);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
-                        animation.setAnimationListener(new Animation.AnimationListener(){
+                        animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
-                            public void onAnimationStart(Animation animation){
+                            public void onAnimationStart(Animation animation) {
                                 vibrate();
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation){}
+                            public void onAnimationRepeat(Animation animation) {
+                            }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 if (adapter.getListButtonApp().get(position).getText().equals(getString(R.string.back))) {
                                     SettingSensorsActivity.this.finish();
                                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                }else{
+                                } else {
                                     Intent intent = new Intent(getApplicationContext(), SettingSensorActivity.class);
                                     intent.putExtra("alias", adapter.getListButtonApp().get(position).getText());
                                     startActivity(intent);
@@ -93,14 +112,16 @@ public class SettingSensorsActivity extends AppCompatActivity {
                         view.startAnimation(animation);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {}
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
 
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));

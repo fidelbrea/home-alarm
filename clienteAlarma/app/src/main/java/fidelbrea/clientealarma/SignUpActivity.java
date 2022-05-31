@@ -1,8 +1,27 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -75,54 +94,61 @@ public class SignUpActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         public void run() {
                             try {
-                                CallHandler callHandler = new CallHandler();
-                                Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
-                                ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
-                                boolean userAuthorized = servicioRmiInt.checkEmail(signUpEmailTextInput.getText().toString());
-                                client.close();
-                                if (userAuthorized) {
-                                    mAuth.createUserWithEmailAndPassword(signUpEmailTextInput.getText().toString(), signUpPasswordTextInput.getText().toString()).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (task.isSuccessful()) {
-                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                try {
-                                                    if (user != null)
-                                                        user.sendEmailVerification()
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful()) {
-                                                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                                                                    SignUpActivity.this);
-                                                                            alertDialogBuilder.setTitle(getString(R.string.verify_email_id));
-                                                                            alertDialogBuilder
-                                                                                    .setMessage(getString(R.string.verification_email_sent))
-                                                                                    .setCancelable(false)
-                                                                                    .setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
-                                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                                            Intent signInIntent = new Intent(SignUpActivity.this, SignInActivity.class);
-                                                                                            SignUpActivity.this.finish();
-                                                                                        }
-                                                                                    });
-                                                                            AlertDialog alertDialog = alertDialogBuilder.create();
-                                                                            alertDialog.show();
+                                SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
+                                if(!confServerUrl.equals("")) {
+                                    CallHandler callHandler = new CallHandler();
+                                    Client client = new Client(confServerUrl, confServerPort, callHandler);
+                                    ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
+                                    boolean userAuthorized = servicioRmiInt.checkEmail(signUpEmailTextInput.getText().toString());
+                                    client.close();
+                                    if (userAuthorized) {
+                                        mAuth.createUserWithEmailAndPassword(signUpEmailTextInput.getText().toString(), signUpPasswordTextInput.getText().toString()).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser user = mAuth.getCurrentUser();
+                                                    try {
+                                                        if (user != null)
+                                                            user.sendEmailVerification()
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                                                        SignUpActivity.this);
+                                                                                alertDialogBuilder.setTitle(getString(R.string.verify_email_id));
+                                                                                alertDialogBuilder
+                                                                                        .setMessage(getString(R.string.verification_email_sent))
+                                                                                        .setCancelable(false)
+                                                                                        .setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                Intent signInIntent = new Intent(SignUpActivity.this, SignInActivity.class);
+                                                                                                SignUpActivity.this.finish();
+                                                                                            }
+                                                                                        });
+                                                                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                                                                alertDialog.show();
+                                                                            }
                                                                         }
-                                                                    }
-                                                                });
-                                                } catch (Exception e) {
-                                                    errorView.setText(e.getMessage());
-                                                }
-                                            } else {
-                                                Toast.makeText(SignUpActivity.this, getString(R.string.error_authentication_failed), Toast.LENGTH_SHORT).show();
-                                                if (task.getException() != null) {
-                                                    errorView.setText(task.getException().getMessage());
+                                                                    });
+                                                    } catch (Exception e) {
+                                                        errorView.setText(e.getMessage());
+                                                    }
+                                                } else {
+                                                    Toast.makeText(SignUpActivity.this, getString(R.string.error_authentication_failed), Toast.LENGTH_SHORT).show();
+                                                    if (task.getException() != null) {
+                                                        errorView.setText(task.getException().getMessage());
+                                                    }
                                                 }
                                             }
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        errorView.setText(getString(R.string.error_email_not_authorized));
+                                    }
                                 } else {
-                                    errorView.setText(getString(R.string.error_email_not_authorized));
+                                    errorView.setText(getString(R.string.error_need_admin_sing_up));
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

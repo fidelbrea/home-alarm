@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2022 Fidel Brea Montilla (fidelbreamontilla@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fidelbrea.clientealarma;
 
 import android.animation.ArgbEvaluator;
@@ -7,11 +24,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -53,7 +72,7 @@ public class SettingUserActivity extends AppCompatActivity {
 
         try {
             alias = getIntent().getExtras().get("alias").toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             SettingUserActivity.this.finish();
         }
@@ -76,7 +95,7 @@ public class SettingUserActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(mUIFlag);
 
         ObjectAnimator colorAnimCode = ObjectAnimator.ofInt(
-                (TextView)findViewById(R.id.textCodeTitle),
+                (TextView) findViewById(R.id.textCodeTitle),
                 "textColor",
                 Color.BLACK,
                 Color.RED);
@@ -87,7 +106,7 @@ public class SettingUserActivity extends AppCompatActivity {
         colorAnimCode.setRepeatMode(ValueAnimator.REVERSE);
 
         ObjectAnimator colorAnimTag = ObjectAnimator.ofInt(
-                (TextView)findViewById(R.id.textTagTitle),
+                (TextView) findViewById(R.id.textTagTitle),
                 "textColor",
                 Color.BLACK,
                 Color.RED);
@@ -106,7 +125,7 @@ public class SettingUserActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 try {
                     if (intent.getAction().equals("CODE")) {
-                        if(waitingForCode) {
+                        if (waitingForCode) {
                             waitingForCode = false;
                             colorAnimCode.pause();
                             ((TextView) findViewById(R.id.textCodeTitle)).setTextColor(Color.BLACK);
@@ -114,8 +133,11 @@ public class SettingUserActivity extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 public void run() {
                                     try {
+                                        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                        Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                         CallHandler callHandler = new CallHandler();
-                                        Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
                                         ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                         servicioRmiInt.updateUserCode(((TextView) findViewById(R.id.textEmail)).getText().toString(), intent.getExtras().get("code").toString());
                                         client.close();
@@ -127,7 +149,7 @@ public class SettingUserActivity extends AppCompatActivity {
                         }
                     }
                     if (intent.getAction().equals("TAG")) {
-                        if(waitingForTag) {
+                        if (waitingForTag) {
                             waitingForTag = false;
                             colorAnimTag.pause();
                             ((TextView) findViewById(R.id.textTagTitle)).setTextColor(Color.BLACK);
@@ -135,8 +157,11 @@ public class SettingUserActivity extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 public void run() {
                                     try {
+                                        SharedPreferences myPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        String confServerUrl = myPreferences.getString("URL_SERVER", "");
+                                        Integer confServerPort = myPreferences.getInt("PORT_SERVER", 28803);
                                         CallHandler callHandler = new CallHandler();
-                                        Client client = new Client(getString(R.string.url_server), getResources().getInteger(R.integer.server_port), callHandler);
+                                        Client client = new Client(confServerUrl, confServerPort, callHandler);
                                         ServicioRmiInt servicioRmiInt = (ServicioRmiInt) client.getGlobal(ServicioRmiInt.class);
                                         servicioRmiInt.updateUserTag(((TextView) findViewById(R.id.textEmail)).getText().toString(), intent.getExtras().get("tag").toString());
                                         client.close();
@@ -147,7 +172,7 @@ public class SettingUserActivity extends AppCompatActivity {
                             }).start();
                         }
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -177,7 +202,7 @@ public class SettingUserActivity extends AppCompatActivity {
         recyclerViewSwitch.setLayoutManager(l1);
         recyclerViewSwitch.setAdapter(adapterSwitches);
         recyclerViewSwitch.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewSwitch ,new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(this, recyclerViewSwitch, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         vibrate();
@@ -185,7 +210,8 @@ public class SettingUserActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongItemClick(View view, int position) {}
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
@@ -194,29 +220,31 @@ public class SettingUserActivity extends AppCompatActivity {
         recyclerViewButton.setLayoutManager(l2);
         recyclerViewButton.setAdapter(adapterButtons);
         recyclerViewButton.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerViewButton ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(this, recyclerViewButton, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_pressed);
-                        animation.setAnimationListener(new Animation.AnimationListener(){
+                        animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
-                            public void onAnimationStart(Animation animation){
+                            public void onAnimationStart(Animation animation) {
                                 vibrate();
                             }
 
                             @Override
-                            public void onAnimationRepeat(Animation animation){}
+                            public void onAnimationRepeat(Animation animation) {
+                            }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.back))) {
                                     SettingUserActivity.this.finish();
                                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                }else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.edit_alias))){
+                                } else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.edit_alias))) {
                                     Intent intent = new Intent(getApplicationContext(), SettingUserModifyAliasActivity.class);
                                     intent.putExtra("alias", alias);
                                     startActivityForResult(intent, 1);
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.modify_code))){
+                                } else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.modify_code))) {
                                     waitingForCode = true;
                                     colorAnimCode.start();
                                     waitingForTag = false;
@@ -228,7 +256,7 @@ public class SettingUserActivity extends AppCompatActivity {
                                             toast.show();
                                         }
                                     });
-                                }else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.modify_tag))){
+                                } else if (adapterButtons.getListButtonApp().get(position).getText().equals(getString(R.string.modify_tag))) {
                                     waitingForTag = true;
                                     colorAnimTag.start();
                                     waitingForCode = false;
@@ -246,7 +274,9 @@ public class SettingUserActivity extends AppCompatActivity {
                         view.startAnimation(animation);
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {}
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                    }
                 })
         );
 
@@ -258,7 +288,7 @@ public class SettingUserActivity extends AppCompatActivity {
         if (broadcastReceiver != null) {
             try {
                 unregisterReceiver(broadcastReceiver);
-            }catch(Exception e){
+            } catch (Exception e) {
                 // No problem.
             }
             broadcastReceiver = null;
@@ -266,7 +296,7 @@ public class SettingUserActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void vibrate(){
+    private void vibrate() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -277,13 +307,13 @@ public class SettingUserActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 try {
                     alias = data.getExtras().get("alias").toString();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     SettingUserActivity.this.finish();
                 }
