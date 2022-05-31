@@ -1,6 +1,6 @@
 # Home alarm
 
-![home-alarm-card](https://brea.synology.me/img/home-alarm-card.png)
+![home-alarm-card](http://brea.synology.me/img/home-alarm-card.png)
 
 Home alarm is a final degree project that develops a complete wired alarm system for a home or shop.
 
@@ -8,7 +8,7 @@ The project focuses on software development. However, there is a few information
 
 Can't find what you're looking for? Do not panic, I'm still working on it.  ;)
 
-![no_panic](https://brea.synology.me/img/no_panic.png)
+![no_panic](http://brea.synology.me/img/no_panic.png)
 
 ## Centralita (alarm switchboard)
 
