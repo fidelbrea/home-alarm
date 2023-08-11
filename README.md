@@ -6,9 +6,6 @@ Home alarm is a final degree project that develops a complete wired alarm system
 
 The project focuses on software development. However, there is a few information about electrical and electronic components.
 
-Can't find what you're looking for? Do not panic, I'm still working on it.  ;)
-
-![no_panic](http://brea.synology.me/img/no_panic.png)
 
 ## Centralita (alarm switchboard)
 
